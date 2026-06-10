@@ -4,9 +4,9 @@ This replication study was carried out by five contributors as a university cour
 
 | Contributor | GitHub | Roles |
 |---|---|---|
-| **Ipek Ucar** (Team Leader) | [@ipekucr](https://github.com/ipekucr) | Project administration, Conceptualization, Software (integration / pipeline runner), Writing - review and editing |
-| **Yaprak Sevinc Aldogan** | [@YaprakSevincAldogan](https://github.com/YaprakSevincAldogan) | Data curation (upstream dataset recovery, unified format, validation), Software (Stage 1), Writing - review and editing |
 | **Sherwan Ali** | [@SherwanAli0](https://github.com/SherwanAli0) | Methodology, Software (generation with raw-logit capture, Stage 2), Investigation (Colab A100/L4 runs, batching study), Validation, Writing - original draft |
+| **Ipek Ucar** | [@ipekucr](https://github.com/ipekucr) | Project administration, Conceptualization, Software (integration / pipeline runner), Writing - review and editing |
+| **Yaprak Sevinc Aldogan** | [@YaprakSevincAldogan](https://github.com/YaprakSevincAldogan) | Data curation (upstream dataset recovery, unified format, validation), Software (Stage 1), Writing - review and editing |
 | **Yasmine Guidoum** | [@Dandyyass](https://github.com/Dandyyass) | Software (entropy computation and token-to-sentence alignment, Stage 3), Validation, Writing - review and editing |
 | **Abdenour Hichem Guidoum** | - | Software (labeling port and evaluation, Stage 4), Formal analysis (Table I aggregation, classification metrics), Writing - review and editing |
 

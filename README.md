@@ -30,9 +30,9 @@ Full 9-cell table with token-level columns: [`results/tables/replication_table1.
 
 | Name | GitHub | Affiliation |
 |---|---|---|
-| Ipek Ucar (Team Leader) | [@ipekucr](https://github.com/ipekucr) | Uskudar University |
-| Yaprak Sevinc Aldogan | [@YaprakSevincAldogan](https://github.com/YaprakSevincAldogan) | Uskudar University |
 | Sherwan Ali | [@SherwanAli0](https://github.com/SherwanAli0) | Uskudar University |
+| Ipek Ucar | [@ipekucr](https://github.com/ipekucr) | Uskudar University |
+| Yaprak Sevinc Aldogan | [@YaprakSevincAldogan](https://github.com/YaprakSevincAldogan) | Uskudar University |
 | Yasmine Guidoum | [@Dandyyass](https://github.com/Dandyyass) | Uskudar University |
 | Abdenour Hichem Guidoum | - | Uskudar University |
 
@@ -206,7 +206,7 @@ If you use this code or these results, please cite both the original paper and t
 }
 
 @misc{halluscope2026,
-  author = {Ucar, Ipek and Sevinc Aldogan, Yaprak and Ali, Sherwan and Guidoum, Yasmine and Guidoum, Abdenour Hichem},
+  author = {Ali, Sherwan and Ucar, Ipek and Sevinc Aldogan, Yaprak and Guidoum, Yasmine and Guidoum, Abdenour Hichem},
   title  = {HalluScope: Faithful Replication of the Entropy-based Sentence-level Hallucination Score},
   year   = {2026},
   note   = {University course project (SE418), MIT-licensed},

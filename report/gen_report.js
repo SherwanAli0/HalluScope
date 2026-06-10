@@ -113,9 +113,9 @@ children.push(
     children: [new TextRun({ text: "Advisor: [ADD ADVISOR NAME - course rules require the course name AND the advisor’s name on the cover page of ALL reports and the presentation]", bold: true, size: 22, color: "C00000" })] }),
   mkTable([4000, 2400, 2960], [
     ["Team member", "Student ID", "Module ownership"],
-    ["İpek Uçar (Team Leader)", "210201059", "Integration / pipeline"],
-    ["Yaprak Sevinç Aldoğan", "220201032", "Dataset preparation"],
     ["Sherwan Ali", "220201945", "Generation + this run"],
+    ["İpek Uçar", "210201059", "Integration / pipeline"],
+    ["Yaprak Sevinç Aldoğan", "220201032", "Dataset preparation"],
     ["Yasmine Guidoum", "220201929", "Entropy module"],
     ["Abdenour Hichem Guidoum", "220201930", "Evaluation module"],
   ]),
