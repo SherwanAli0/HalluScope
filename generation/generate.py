@@ -1,10 +1,10 @@
-"""Stage 2 — Generation with raw-logit capture (faithful replication).
+"""Stage 2 - Generation with raw-logit capture (faithful replication).
 
 Runs a HuggingFace causal LM on every prompt from Stage 1, replicating the
 generation setup of Joo et al. (2025), which follows Ivgi et al. (2024)
 (run_hallucinations_check.py in https://github.com/Mivg/fallbacks):
 
-  * raw completion prompting — NO chat template, for base AND instruct models
+  * raw completion prompting - NO chat template, for base AND instruct models
   * greedy decoding: do_sample=False (temperature/top-k/top-p inactive)
   * max_new_tokens = 512
 
@@ -14,7 +14,7 @@ For every generated token we store:
     not `output_scores=True`, because processed scores can be silently warped
     by logits processors. Entropy is computed in float32 for numerical safety.
   * log-probability of the chosen token (cheap to keep; used later for
-    failure analysis / extensions — NOT part of the replication metric).
+    failure analysis / extensions - NOT part of the replication metric).
   * the token's character span in the decoded completion, computed by
     cumulative-prefix decoding (there is no offset_mapping for generated
     ids). Special tokens get zero-width spans and are flagged.
@@ -122,7 +122,7 @@ def generate_one(model, tokenizer, prompt: str, max_new_tokens: int):
     with torch.no_grad():
         out = model.generate(
             **inputs,
-            do_sample=False,            # greedy — overrides instruct defaults
+            do_sample=False,            # greedy - overrides instruct defaults
             max_new_tokens=max_new_tokens,
             return_dict_in_generate=True,
             output_logits=True,         # RAW logits, not processed scores
@@ -165,7 +165,7 @@ def generate_batch(model, tokenizer, prompts, max_new_tokens):
     absolute position, which keeps out.logits[t][b] aligned with sequence b's
     t-th generated token. With a correct attention mask the real-token logits
     are identical to the single-prompt path (up to floating-point noise from
-    batched matmuls) — verified by tools/validate_batching.py. Padding/EOS
+    batched matmuls) - verified by tools/validate_batching.py. Padding/EOS
     tokens that trail a finished sequence are flagged `special` and excluded
     from entropy downstream, exactly as the lone EOS is in the batch-1 path.
     """

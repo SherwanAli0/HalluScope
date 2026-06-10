@@ -1,14 +1,14 @@
 """Cross-platform single-command reproduction for the HalluScope replication.
 
 Regenerates every table and figure in results/ from the committed labeled
-data (evaluation/outputs/) — no GPU needed, takes seconds:
+data (evaluation/outputs/) - no GPU needed, takes seconds:
 
     python run_all.py             # fetch+validate data, rebuild tables+figures
     python run_all.py --tests     # additionally run the 12-test sanity suite
     python run_all.py --only data         # just validate/build the datasets
     python run_all.py --only aggregate    # just rebuild results/
 
-Regenerating the MODEL RUNS themselves (GPU, ~2h/model) is a separate path —
+Regenerating the MODEL RUNS themselves (GPU, ~2h/model) is a separate path - 
 see integration/COLAB_GUIDE.md and integration/run_pipeline.py.
 """
 
@@ -40,7 +40,7 @@ def main():
         present = [a for a in ALIASES
                    if (REPO / "evaluation" / "outputs" / a).is_dir()]
         if not present:
-            print("\n[skip] no evaluation/outputs/<alias>/ found — nothing to "
+            print("\n[skip] no evaluation/outputs/<alias>/ found - nothing to "
                   "aggregate. (Did you clone without the committed outputs, "
                   "or are you mid-regeneration?)")
         else:

@@ -1,17 +1,17 @@
-"""Stage 1 — Dataset preparation (faithful replication).
+"""Stage 1 - Dataset preparation (faithful replication).
 
 Downloads the three evaluation datasets used by Joo et al. (2025) from the
 official repository of their upstream setup, Ivgi et al. (2024) "From Loops to
 Oops" (https://github.com/Mivg/fallbacks, MIT license), and converts them into
 HalluScope's unified JSONL format.
 
-The paper states: "we evaluated large language models using three datasets —
-QAMPARI, FAKEQAMPARI, and TriviaFacts — comprising 297 samples, following the
+The paper states: "we evaluated large language models using three datasets - 
+QAMPARI, FAKEQAMPARI, and TriviaFacts - comprising 297 samples, following the
 setup from [9]".  297 = 97 (trivia_facts) + 100 (qampari_rephrased)
 + 100 (fake_qampari), which is exactly what these files contain.
 
 Each line of the upstream files is {"<prompt>": [gold answers]} where the
-prompt already ends with the completion cue "\n1." — it is fed to the model
+prompt already ends with the completion cue "\n1." - it is fed to the model
 verbatim, with NO chat template (this mirrors run_hallucinations_check.py in
 the upstream repo).
 

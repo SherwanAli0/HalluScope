@@ -1,4 +1,4 @@
-# Replication of Table I — Joo, Lee & Choi (2025)
+# Replication of Table I - Joo, Lee & Choi (2025)
 
 Entropy in nats. `ours` = this replication; `paper` = Table I as printed. Non-hallucinated class: `strict` = C sentences; for fake_qampari the strict class is empty by construction, so `broad` (all non-H sentences) is shown there (marked *).
 

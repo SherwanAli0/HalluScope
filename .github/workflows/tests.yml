@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      # The sanity suite runs on the COMMITTED datasets and result CSVs only —
+      # The sanity suite runs on the COMMITTED datasets and result CSVs only - 
       # no torch/transformers/GPU needed in CI.
       - name: Install test dependencies
         run: |

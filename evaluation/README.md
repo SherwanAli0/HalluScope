@@ -1,9 +1,9 @@
-# Stage 4 — Labeling & Evaluation
+# Stage 4 - Labeling & Evaluation
 
 **What this module does:** labels every generated answer and sentence as
 CORRECT / HALLUCINATION / REPETITION using the *exact protocol the base paper
-inherited*, then builds the replication's headline artifact — our version of
-the paper's Table I — plus classification metrics the paper doesn't report.
+inherited*, then builds the replication's headline artifact - our version of
+the paper's Table I - plus classification metrics the paper doesn't report.
 
 ## Files
 
@@ -18,7 +18,7 @@ the paper's Table I — plus classification metrics the paper doesn't report.
 
 Joo et al. (2025) follow the setup of Ivgi et al. (2024). The functions in
 `label.py` (`extract_answers`, `normalize_answer`, `greedy_match`, …) are
-ported **verbatim** from the upstream `run_hallucinations_check.py` — quirks
+ported **verbatim** from the upstream `run_hallucinations_check.py` - quirks
 included, because "fixing" them would change the ground truth labels:
 
 1. Parse up to **25 enumerated answers** from the completion (regex; handles
@@ -38,7 +38,7 @@ The upstream protocol labels *answers* (list items); the paper scores
 *sentences*. The paper never states the mapping, so ours is explicit:
 
 - each labeled answer is located in the completion (sequential string
-  search; the mapped fraction is printed — unmapped answers just leave their
+  search; the mapped fraction is printed - unmapped answers just leave their
   sentences unlabeled);
 - a sentence is **H** if it overlaps ≥1 hallucinated answer; else **C** if it
   overlaps ≥1 correct answer; else **R** if it overlaps only repetitions;
@@ -56,15 +56,15 @@ practice ≈1 answer ↔ 1 sentence.
   flagged as an interpretation.
 - **Non-hallucinated class**: `strict` = C sentences only. For
   `fake_qampari` no C sentences can exist, yet the paper still reports a
-  Non-hallucinate column — the only consistent reading is `broad` = all
+  Non-hallucinate column - the only consistent reading is `broad` = all
   non-H sentences, which we use there (marked `*` in the table). Both
   definitions are in the CSV.
 
 ## Claim verdicts produced
 
-- **C1** — hallucinated sentences have higher entropy than non-hallucinated
+- **C1** - hallucinated sentences have higher entropy than non-hallucinated
   (token AND sentence level), per model × dataset.
-- **C2** — the class gap is larger at sentence level than token level
+- **C2** - the class gap is larger at sentence level than token level
   (the paper's headline argument for sentence-level scoring).
 
 ## How to run

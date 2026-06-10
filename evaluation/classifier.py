@@ -1,4 +1,4 @@
-"""Stage 4c — Threshold classifier on sentence entropy (EXTENSION, not replication).
+"""Stage 4c - Threshold classifier on sentence entropy (EXTENSION, not replication).
 
 The base paper only reports average entropies (Table I). This module goes
 beyond it (HalluScope objective 4): treat sentence-level entropy as a score
@@ -85,7 +85,7 @@ def main():
         ax.plot([0, 1], [0, 1], "k--", lw=0.8)
         ax.set_xlabel("False positive rate")
         ax.set_ylabel("True positive rate")
-        ax.set_title(f"Sentence-entropy hallucination detection — {alias}")
+        ax.set_title(f"Sentence-entropy hallucination detection - {alias}")
         ax.legend(loc="lower right", fontsize=8)
         fig.tight_layout()
         fig.savefig(FIGURES / f"roc_{alias}.png", dpi=160)

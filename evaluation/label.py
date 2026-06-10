@@ -1,4 +1,4 @@
-"""Stage 4a — Hallucination labeling (faithful port of the upstream protocol).
+"""Stage 4a - Hallucination labeling (faithful port of the upstream protocol).
 
 The functions `extract_answers`, `normalize_answer`, `remove_trailing_parenthesis`,
 `tokenize`, `longest_common_subsequence`, `compute_similarity`, `greedy_match`
@@ -11,7 +11,7 @@ rule, are ported VERBATIM (prints removed) from:
 
 Joo et al. (2025) state their experiment follows this setup, so these rules
 ARE the ground-truth protocol of the base paper. Quirks in the upstream code
-are intentionally preserved — fixing them would change the labels.
+are intentionally preserved - fixing them would change the labels.
 
 Labeling protocol (answerable datasets: trivia_facts, qampari):
   1. parse up to 25 enumerated answers out of the completion;
@@ -25,10 +25,10 @@ unique answer is a HALLUCINATION by construction.
 
 This script then maps each labeled answer to its character span in the
 completion and labels each Stage 3 sentence:
-  H  — overlaps >=1 HALLUCINATION answer
-  C  — else, overlaps >=1 CORRECT answer
-  R  — else, overlaps >=1 REPETITION answer
-  None — overlaps no labeled answer (prose, refusals, degenerate tails)
+  H - overlaps >=1 HALLUCINATION answer
+  C - else, overlaps >=1 CORRECT answer
+  R - else, overlaps >=1 REPETITION answer
+  None - overlaps no labeled answer (prose, refusals, degenerate tails)
 
 Output: outputs/<alias>/<dataset>.jsonl with per-sentence labels + entropy.
 
@@ -53,7 +53,7 @@ ENT_DIR = REPO / "entropy" / "outputs"
 OUT_DIR = HERE / "outputs"
 
 # ----------------------------------------------------------------------------
-# Ported upstream code (Ivgi et al. 2024, MIT) — do not "fix"; quirks are part
+# Ported upstream code (Ivgi et al. 2024, MIT) - do not "fix"; quirks are part
 # of the published protocol.
 # ----------------------------------------------------------------------------
 
@@ -355,7 +355,7 @@ def main():
     unmapped = mapped = 0
     for f in files:
         ent_path = ent_dir / f.name
-        assert ent_path.exists(), f"missing entropy output {ent_path} — run Stage 3 first"
+        assert ent_path.exists(), f"missing entropy output {ent_path} - run Stage 3 first"
         ent_by_id = {json.loads(l)["id"]: json.loads(l)["sentences"]
                      for l in open(ent_path, encoding="utf-8")}
 

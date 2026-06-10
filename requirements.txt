@@ -1,4 +1,4 @@
-# HalluScope — faithful replication of Joo, Lee & Choi (2025)
+# HalluScope - faithful replication of Joo, Lee & Choi (2025)
 # Python 3.11. Install torch separately for your platform first, e.g.:
 #   pip install torch --index-url https://download.pytorch.org/whl/cu121
 transformers>=4.38,<5   # output_logits=True (raw logits) needs >=4.38; <5 keeps compatibility with torch 2.5.x (transformers 5.x needs a newer torch). Tested on 4.46.3.

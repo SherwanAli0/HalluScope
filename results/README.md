@@ -9,7 +9,7 @@ the per-stage `outputs/` folders, which are regenerable and gitignored).
 | File | Contents |
 |---|---|
 | `replication_table1.csv` | Our Table I numbers next to the paper's printed values, both non-hallucinated class definitions (strict/broad), sentence & token counts |
-| `replication_table1.md` | Human-readable side-by-side table with per-cell C1/C2 claim verdicts — **the headline replication artifact**; paste-ready for the report |
+| `replication_table1.md` | Human-readable side-by-side table with per-cell C1/C2 claim verdicts - **the headline replication artifact**; paste-ready for the report |
 | `classification_metrics.csv` | AUROC, best-F1, precision, recall, threshold per model × dataset (extension beyond the paper) |
 
 ## figures/
@@ -24,4 +24,4 @@ the per-stage `outputs/` folders, which are regenerable and gitignored).
 py -3.11 integration/run_pipeline.py --aggregate <alias1> <alias2> ...
 ```
 
-after stages 2–4 have produced outputs for those aliases.
+after stages 2-4 have produced outputs for those aliases.

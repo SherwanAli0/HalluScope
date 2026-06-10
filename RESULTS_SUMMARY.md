@@ -2,7 +2,7 @@
 
 One-page overview of the replication results. Full numbers: [`results/tables/replication_table1.md`](results/tables/replication_table1.md) and [`results/tables/classification_metrics.csv`](results/tables/classification_metrics.csv). Full analysis: `report/HalluScope_Replication_Handoff_Report.docx` §8.
 
-**Setup.** 3 models (LLaMA-3-8B-Instruct, Qwen2-7B-Instruct, Gemma-2-9B-it) x 3 datasets (TriviaFacts 97, QAMPARI 100, FakeQAMPARI 100 — the paper's exact 297 prompts) x 512 greedy tokens, native bf16, batch 1. Sentence score = mean token entropy (paper Eq. 2), in nats.
+**Setup.** 3 models (LLaMA-3-8B-Instruct, Qwen2-7B-Instruct, Gemma-2-9B-it) x 3 datasets (TriviaFacts 97, QAMPARI 100, FakeQAMPARI 100 - the paper's exact 297 prompts) x 512 greedy tokens, native bf16, batch 1. Sentence score = mean token entropy (paper Eq. 2), in nats.
 
 ## Table I replication (sentence-level, ours / paper)
 
@@ -22,11 +22,11 @@ One-page overview of the replication results. Full numbers: [`results/tables/rep
 
 ## Verdicts
 
-- **C1 (hallucinated > non-hallucinated): CONFIRMED 9/9** — at sentence AND token level, ours and the paper's printed values alike.
-- **C2 (sentence gap > token gap): PARTIAL 5/9** — LLaMA-3 3/3, FakeQAMPARI 3/3; fails on Qwen2/Gemma-2 natural-data cells.
-- **C3 (absolute values): PARTIAL** — non-hallucinated class matches closely (several cells within 0.01-0.03 nats); hallucinated class runs ~0.2-0.4 nats below the paper everywhere (compressed gap, never inverted). Candidate causes: the paper's unstated answer→sentence label mapping; unstated inference precision; unstated "Gemma2" size.
+- **C1 (hallucinated > non-hallucinated): CONFIRMED 9/9** - at sentence AND token level, ours and the paper's printed values alike.
+- **C2 (sentence gap > token gap): PARTIAL 5/9** - LLaMA-3 3/3, FakeQAMPARI 3/3; fails on Qwen2/Gemma-2 natural-data cells.
+- **C3 (absolute values): PARTIAL** - non-hallucinated class matches closely (several cells within 0.01-0.03 nats); hallucinated class runs ~0.2-0.4 nats below the paper everywhere (compressed gap, never inverted). Candidate causes: the paper's unstated answer→sentence label mapping; unstated inference precision; unstated "Gemma2" size.
 
-## Detection quality (extension — AUROC, positive class = hallucinated)
+## Detection quality (extension - AUROC, positive class = hallucinated)
 
 | Model | FakeQAMPARI | QAMPARI | TriviaFacts |
 |---|---|---|---|
@@ -34,7 +34,7 @@ One-page overview of the replication results. Full numbers: [`results/tables/rep
 | Qwen2-7B | 0.747 | 0.528 | 0.632 |
 | Gemma-2-9B | 0.780 | 0.620 | 0.627 |
 
-Entropy detects fabricated-entity hallucinations well; on natural multi-answer questions many hallucinations are produced confidently — quantifying the paper's own "entropy alone is not enough" caveat. (F1 values in the CSV are inflated by class imbalance; AUROC is the meaningful number. Qwen2/QAMPARI rests on only 87 strict-correct sentences.)
+Entropy detects fabricated-entity hallucinations well; on natural multi-answer questions many hallucinations are produced confidently - quantifying the paper's own "entropy alone is not enough" caveat. (F1 values in the CSV are inflated by class imbalance; AUROC is the meaningful number. Qwen2/QAMPARI rests on only 87 strict-correct sentences.)
 
 ## Run statistics
 
@@ -44,4 +44,4 @@ Entropy detects fabricated-entity hallucinations well; on natural multi-answer q
 | Qwen2-7B | L4 24GB | 8,381 | 455 | 4,738 | 667 | 2,521 | 100% |
 | Gemma-2-9B | L4 24GB | 8,853 | 624 | 5,858 | 330 | 2,041 | 100% |
 
-Negative result worth remembering: batched greedy decoding is **non-deterministic** (near-tie argmax flips under batched-matmul rounding) — all reported runs are batch-1 (`tools/validate_batching.py`).
+Negative result worth remembering: batched greedy decoding is **non-deterministic** (near-tie argmax flips under batched-matmul rounding) - all reported runs are batch-1 (`tools/validate_batching.py`).

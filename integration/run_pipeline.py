@@ -1,4 +1,4 @@
-"""Stage 5 — Pipeline runner.
+"""Stage 5 - Pipeline runner.
 
 Chains the four stages for one model alias:
 

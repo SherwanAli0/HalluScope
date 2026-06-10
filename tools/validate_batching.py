@@ -1,6 +1,6 @@
 """Validate that batched generation matches the single-prompt path.
 
-Batching is a speed optimization, not a method change — so it must produce the
+Batching is a speed optimization, not a method change - so it must produce the
 same per-token entropies as batch-1 (up to floating-point noise from batched
 matmuls and left padding). This script runs the SAME few prompts both ways on a
 small model and reports the maximum entropy difference. If it's tiny
@@ -66,8 +66,8 @@ def main():
           f"{max_ent_diff:.6f} nats")
     print(f"completions textually mismatched: {max_text_mismatch}/{len(prompts)}")
     ok = max_ent_diff < 0.01 and max_text_mismatch == 0
-    print("RESULT:", "PASS — batched path is faithful" if ok
-          else "FAIL — investigate before using batching")
+    print("RESULT:", "PASS - batched path is faithful" if ok
+          else "FAIL - investigate before using batching")
     sys.exit(0 if ok else 1)
 
 

@@ -29,7 +29,7 @@
 
 - [ ] No change to the replication semantics (greedy batch-1 decoding, raw-logit entropy in fp32 nats, the ported labeling protocol, Eq. 2 plain-mean aggregation), OR the change is justified by a specific paper/upstream-protocol reference cited in this PR.
 - [ ] The C1 sanity checks still pass in all 9 cells (`python -m pytest tests/ -v`).
-- [ ] No extension/novelty (new scores, new datasets, new models) was mixed into the replication path — extensions live behind separate aliases/configs and are labeled as extensions.
+- [ ] No extension/novelty (new scores, new datasets, new models) was mixed into the replication path - extensions live behind separate aliases/configs and are labeled as extensions.
 
 ## Tested
 

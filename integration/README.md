@@ -1,8 +1,8 @@
-# Stage 5 — Integration
+# Stage 5 - Integration
 
 **What this module does:** chains the file-based stages into one command,
 holds the experiment configuration, and provides the Colab notebook used to
-run the 7–9B replication models that don't fit local hardware.
+run the 7-9B replication models that don't fit local hardware.
 
 ## Files
 
@@ -16,12 +16,12 @@ run the 7–9B replication models that don't fit local hardware.
 
 | Model (paper name) | HF checkpoint | Where | Why |
 |---|---|---|---|
-| LLaMa3 | `meta-llama/Meta-Llama-3-8B-Instruct` | Colab T4, 4-bit NF4 | ~16 GB fp16 — exceeds both local 4 GB and T4 fp16 |
+| LLaMa3 | `meta-llama/Meta-Llama-3-8B-Instruct` | Colab T4, 4-bit NF4 | ~16 GB fp16 - exceeds both local 4 GB and T4 fp16 |
 | Qwen2 | `Qwen/Qwen2-7B-Instruct` | Colab T4, 4-bit NF4 | ~15 GB fp16 |
 | Gemma2 | `google/gemma-2-9b-it` | Colab T4, 4-bit NF4 | fp16 is broken for Gemma-2; bf16 unsupported on T4 |
 | Gemma2 (fallback) | `google/gemma-2-2b-it` | local RTX 2050, 4-bit | backup if Colab quota runs out (report as deviation) |
 
-Identical 4-bit config for every model (NF4, double quant) — never mix
+Identical 4-bit config for every model (NF4, double quant) - never mix
 quantized and unquantized runs in one comparison.
 
 ## Colab workflow
@@ -29,11 +29,11 @@ quantized and unquantized runs in one comparison.
 1. Open `colab_replication.ipynb` in Google Colab, set runtime → T4 GPU.
 2. Add your HF token as a Colab secret named `HF_TOKEN` (Llama-3 and Gemma-2
    are gated: accept both licenses on their HF model pages first).
-3. Run all cells; each model takes roughly 1.5–3 h for 297 prompts × 512
+3. Run all cells; each model takes roughly 1.5-3 h for 297 prompts × 512
    tokens. Generation **appends + flushes per prompt and resumes** after a
-   disconnect — just re-run the cell.
+   disconnect - just re-run the cell.
 4. The notebook zips `generation/outputs/` and saves it to Drive; download
-   and unzip it into `generation/outputs/` locally, then run stages 3–4
+   and unzip it into `generation/outputs/` locally, then run stages 3-4
    locally:
 
 ```

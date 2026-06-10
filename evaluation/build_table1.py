@@ -1,28 +1,28 @@
-"""Stage 4b — Replication Table I + side-by-side comparison with the paper.
+"""Stage 4b - Replication Table I + side-by-side comparison with the paper.
 
 Aggregates labeled sentences into the base paper's Table I format:
 
   per (dataset, model):
-    Non-hallucinate (Token)   — micro mean over all tokens of non-halluc sentences
-    Non-hallucinate (Sentence)— macro mean of sentence-level entropies
-    Hallucinate (Token)       — same, for hallucinated sentences
+    Non-hallucinate (Token)  - micro mean over all tokens of non-halluc sentences
+    Non-hallucinate (Sentence) -  macro mean of sentence-level entropies
+    Hallucinate (Token)      - same, for hallucinated sentences
     Hallucinate (Sentence)
 
 "Token level" = mean over ALL tokens belonging to sentences of the class
 (micro average); "sentence level" = mean of per-sentence means (macro
-average). The paper does not define this precisely — this is the natural
+average). The paper does not define this precisely - this is the natural
 reading and is documented as an interpretation.
 
 Non-hallucinated class definitions (the paper is ambiguous; we report both):
-  strict — sentences labeled C (contain a verified-correct answer)
-  broad  — all sentences NOT labeled H (C + R + unlabeled prose)
+  strict - sentences labeled C (contain a verified-correct answer)
+  broad - all sentences NOT labeled H (C + R + unlabeled prose)
 For fake_qampari every answer is a hallucination by construction, so the
 strict class is empty there and the broad definition is the only possible
 reading of the paper's reported "Non-hallucinate" column.
 
 Claims verdicts:
-  C1 — hallucinated entropy > non-hallucinated entropy (token AND sentence)
-  C2 — sentence-level gap > token-level gap
+  C1 - hallucinated entropy > non-hallucinated entropy (token AND sentence)
+  C2 - sentence-level gap > token-level gap
 
 Outputs:
   results/tables/replication_table1.csv  (full numbers, both definitions)
@@ -124,7 +124,7 @@ def main():
     df.to_csv(csv_path, index=False)
 
     # human-readable markdown with claim verdicts -------------------------
-    lines = ["# Replication of Table I — Joo, Lee & Choi (2025)", "",
+    lines = ["# Replication of Table I - Joo, Lee & Choi (2025)", "",
              "Entropy in nats. `ours` = this replication; `paper` = Table I "
              "as printed. Non-hallucinated class: `strict` = C sentences; "
              "for fake_qampari the strict class is empty by construction, so "
@@ -134,7 +134,7 @@ def main():
     lines += [header, "|" + "---|" * 8]
 
     def fmt(x):
-        return "—" if x is None else f"{x:.4f}"
+        return " - " if x is None else f"{x:.4f}"
 
     c1_pass = c2_pass = total = 0
     for _, r in df.iterrows():
@@ -155,8 +155,8 @@ def main():
             f"| {fmt(nh_sent)} / {fmt(r['paper_nonh_sent'])} "
             f"| {fmt(r['h_token'])} / {fmt(r['paper_h_token'])} "
             f"| {fmt(r['h_sent'])} / {fmt(r['paper_h_sent'])} "
-            f"| {'✓' if c1 else '✗' if c1 is not None else '—'} "
-            f"| {'✓' if c2 else '✗' if c2 is not None else '—'} |")
+            f"| {'✓' if c1 else '✗' if c1 is not None else ' - '} "
+            f"| {'✓' if c2 else '✗' if c2 is not None else ' - '} |")
 
     lines += ["",
               f"**C1** (hallucinated > non-hallucinated, both levels): "

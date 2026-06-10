@@ -10,7 +10,7 @@
 
 ## Abstract
 
-This repository is an independent paper-faithful replication of the entropy-based sentence-level hallucination score introduced by Joo et al. The method computes the Shannon entropy of the model's full-vocabulary token distribution at every generation step (paper Eq. 1) and averages it over the tokens of each spaCy-split sentence (Eq. 2); higher sentence entropy signals hallucination risk. We rebuilt the method from the paper text alone (no official code exists — we verified), recovered the paper's exact 297 evaluation prompts and labeling protocol from the upstream repository it cites (Ivgi et al. 2024, github.com/Mivg/fallbacks), and ran all three paper models — LLaMA-3-8B-Instruct, Qwen2-7B-Instruct, Gemma-2-9B-it — in native bf16, greedy, 512 new tokens, batch 1. The paper's central claim reproduces 9/9: hallucinated sentences carry higher entropy than non-hallucinated ones in every model x dataset cell, at both token and sentence level. On FakeQAMPARI, LLaMA-3 matches the paper's printed values to within ~0.02 nats on both classes (0.146/0.611 vs 0.142/0.631).
+This repository is an independent paper-faithful replication of the entropy-based sentence-level hallucination score introduced by Joo et al. The method computes the Shannon entropy of the model's full-vocabulary token distribution at every generation step (paper Eq. 1) and averages it over the tokens of each spaCy-split sentence (Eq. 2); higher sentence entropy signals hallucination risk. We rebuilt the method from the paper text alone (no official code exists - we verified), recovered the paper's exact 297 evaluation prompts and labeling protocol from the upstream repository it cites (Ivgi et al. 2024, github.com/Mivg/fallbacks), and ran all three paper models - LLaMA-3-8B-Instruct, Qwen2-7B-Instruct, Gemma-2-9B-it - in native bf16, greedy, 512 new tokens, batch 1. The paper's central claim reproduces 9/9: hallucinated sentences carry higher entropy than non-hallucinated ones in every model x dataset cell, at both token and sentence level. On FakeQAMPARI, LLaMA-3 matches the paper's printed values to within ~0.02 nats on both classes (0.146/0.611 vs 0.142/0.631).
 
 ## Headline result
 
@@ -34,9 +34,18 @@ Full 9-cell table with token-level columns: [`results/tables/replication_table1.
 | Yaprak Sevinc Aldogan | [@YaprakSevincAldogan](https://github.com/YaprakSevincAldogan) | Uskudar University |
 | Sherwan Ali | [@SherwanAli0](https://github.com/SherwanAli0) | Uskudar University |
 | Yasmine Guidoum | [@Dandyyass](https://github.com/Dandyyass) | Uskudar University |
-| Abdenour Hichem Guidoum | — | Uskudar University |
+| Abdenour Hichem Guidoum | - | Uskudar University |
 
 Per-contribution roles are listed in [CONTRIBUTORS.md](CONTRIBUTORS.md). University course project (SE418: Large Language Models), 2026.
+
+## Presentation
+
+Project presentation videos on the [HalluScope YouTube channel](https://www.youtube.com/@HalluScope-Entropy-basedSenten):
+
+| Video | Length | Link |
+|---|---|---|
+| Full project presentation | 16m 08s | [LLM Presentation](https://www.youtube.com/watch?v=YVrVozSMKWI) |
+| Short introduction | 2m 41s | [Introduction to the presentation of HalluScope](https://www.youtube.com/watch?v=QILSVvAm4g8) |
 
 ## Repository structure
 
@@ -53,24 +62,24 @@ Per-contribution roles are listed in [CONTRIBUTORS.md](CONTRIBUTORS.md). Univers
 ├── run_all.py                  cross-platform single-command reproduction
 ├── Entropy-based_Sentence-level_Hallucination_Score.pdf
 │
-├── data/                       Stage 1 — the paper's exact 297 prompts (Person: Yaprak)
+├── data/                       Stage 1 - the paper's exact 297 prompts (Person: Yaprak)
 │   ├── fetch_datasets.py       download + validate + unify
 │   └── upstream/               byte-identical files from Mivg/fallbacks (MIT)
 │
-├── generation/                 Stage 2 — greedy generation + RAW logit entropy (Person: Sherwan)
+├── generation/                 Stage 2 - greedy generation + RAW logit entropy (Person: Sherwan)
 │   └── generate.py             output_logits=True, fp32 nats, char spans, resumable
 │
-├── entropy/                    Stage 3 — spaCy sentences + Eq. 2 (Person: Yasmine)
+├── entropy/                    Stage 3 - spaCy sentences + Eq. 2 (Person: Yasmine)
 │   └── sentence_entropy.py
 │
-├── evaluation/                 Stage 4 — labeling + tables + classifier (Person: Hichem)
+├── evaluation/                 Stage 4 - labeling + tables + classifier (Person: Hichem)
 │   ├── label.py                verbatim port of the upstream labeling protocol
 │   ├── build_table1.py         ours-vs-paper Table I + C1/C2 verdicts
 │   ├── classifier.py           AUROC / F1 / ROC curves (extension)
 │   ├── upstream/               reference copy of the original script + its MIT license
 │   └── outputs/                COMMITTED labeled per-sentence data (3 models x 3 datasets)
 │
-├── integration/                Stage 5 — orchestration (Person: Ipek)
+├── integration/                Stage 5 - orchestration (Person: Ipek)
 │   ├── run_pipeline.py         one-command stage chaining
 │   ├── config.yaml             canonical model set + run settings
 │   ├── COLAB_GUIDE.md          click-by-click GPU run manual (zero experience assumed)
@@ -89,14 +98,14 @@ Per-contribution roles are listed in [CONTRIBUTORS.md](CONTRIBUTORS.md). Univers
     └── test_sanity.py
 ```
 
-Each stage folder has its own README documenting every decision taken inside it. The five stages hand off through files on disk (see `PIPELINE_CONTRACT.md`), so they can run on different machines — generation on a Colab GPU, everything else on a laptop.
+Each stage folder has its own README documenting every decision taken inside it. The five stages hand off through files on disk (see `PIPELINE_CONTRACT.md`), so they can run on different machines - generation on a Colab GPU, everything else on a laptop.
 
 ## Requirements
 
 - Python 3.10 to 3.13.
 - Aggregation/tests only (no GPU): `pandas`, `numpy`, `scikit-learn`, `matplotlib`.
 - Full generation additionally needs: `torch`, `transformers>=4.38,<5`, `accelerate`, `spacy` (+ `en_core_web_sm`). Pinned in `requirements.txt`.
-  - `transformers` is capped `<5`: v5 requires a newer torch, and 4.38+ is required for `output_logits=True` (raw logits).
+ - `transformers` is capped `<5`: v5 requires a newer torch, and 4.38+ is required for `output_logits=True` (raw logits).
 - Optional: `pytest` for the test suite.
 
 ```bash
@@ -106,7 +115,7 @@ python -m spacy download en_core_web_sm
 
 ## Data
 
-The three evaluation datasets are committed under `data/upstream/` (tiny, MIT-licensed, from [Mivg/fallbacks](https://github.com/Mivg/fallbacks)) — the paper's "297 samples" exactly:
+The three evaluation datasets are committed under `data/upstream/` (tiny, MIT-licensed, from [Mivg/fallbacks](https://github.com/Mivg/fallbacks)) - the paper's "297 samples" exactly:
 
 | Dataset | Prompts | Answerable | Hallucination ground truth |
 |---|---|---|---|
@@ -120,12 +129,12 @@ python data/fetch_datasets.py     # validates 97/100/100, writes data/processed/
 
 Counts, the `\n1.` completion cue, and empty FakeQAMPARI gold lists are enforced by `assert` statements.
 
-**Model run outputs:** the labeled per-sentence data (`evaluation/outputs/`, ~11 MB) is committed, so all tables and figures can be regenerated without a GPU. The heavier per-token generation outputs (~37 MB) are not in git — regenerate them via `integration/COLAB_GUIDE.md`, or take them from the team's complete zip / Drive folder (`MyDrive/halluscope_out`).
+**Model run outputs:** the labeled per-sentence data (`evaluation/outputs/`, ~11 MB) is committed, so all tables and figures can be regenerated without a GPU. The heavier per-token generation outputs (~37 MB) are not in git - regenerate them via `integration/COLAB_GUIDE.md`, or take them from the team's complete zip / Drive folder (`MyDrive/halluscope_out`).
 
 ## Reproduce the paper
 
 ```bash
-# from the repository root — regenerates every table and figure from committed data (no GPU, seconds):
+# from the repository root - regenerates every table and figure from committed data (no GPU, seconds):
 python run_all.py
 python run_all.py --tests        # also run the 12-test sanity suite
 ```
@@ -139,7 +148,7 @@ make tests         # run the sanity suite
 make smoke         # optional: tiny end-to-end GPU/CPU pipeline test (downloads Qwen2-0.5B)
 ```
 
-To regenerate the model runs themselves (GPU needed — free/Pro Colab works):
+To regenerate the model runs themselves (GPU needed - free/Pro Colab works):
 
 ```bash
 python integration/run_pipeline.py --model meta-llama/Meta-Llama-3-8B-Instruct --alias llama3-8b-instruct --dtype bfloat16
@@ -151,15 +160,15 @@ LLaMA-3 and Gemma-2 are gated on HuggingFace (accept the licenses + `HF_TOKEN`).
 
 ## Results
 
-### Claim C1 — hallucinated > non-hallucinated entropy: CONFIRMED 9/9
+### Claim C1 - hallucinated > non-hallucinated entropy: CONFIRMED 9/9
 
 Holds in every model x dataset cell, at both token and sentence level. Full table: [`results/tables/replication_table1.md`](results/tables/replication_table1.md).
 
-### Claim C2 — sentence-level separates better than token-level: PARTIAL 5/9
+### Claim C2 - sentence-level separates better than token-level: PARTIAL 5/9
 
 Fully holds on LLaMA-3 (3/3) and on FakeQAMPARI for every model; fails on Qwen2/Gemma-2's natural-data cells. An honest nuance the 2-page paper could not surface.
 
-### Detection quality (our extension — the paper reports only class means)
+### Detection quality (our extension - the paper reports only class means)
 
 | Model | FakeQAMPARI AUROC | QAMPARI AUROC | TriviaFacts AUROC |
 |---|---|---|---|
@@ -167,19 +176,19 @@ Fully holds on LLaMA-3 (3/3) and on FakeQAMPARI for every model; fails on Qwen2/
 | Qwen2-7B | 0.747 | 0.528 | 0.632 |
 | Gemma-2-9B | 0.780 | 0.620 | 0.627 |
 
-Entropy detects *fabricated-entity* hallucinations well and struggles on natural multi-answer questions — quantifying exactly where the paper's own "entropy alone is not enough" caveat bites. ROC curves: `results/figures/`.
+Entropy detects *fabricated-entity* hallucinations well and struggles on natural multi-answer questions - quantifying exactly where the paper's own "entropy alone is not enough" caveat bites. ROC curves: `results/figures/`.
 
 ## Replication notes
 
-The faithful implementation reproduces the paper's *non-hallucinated* class means closely (several cells within 0.01–0.03 nats) while our *hallucinated* class means run ~0.2–0.4 nats below the paper's throughout — the separation gap is compressed, though never inverted. The main suspects, in order: (1) the paper never states how answer-level labels become *sentence*-level labels — our mapping rule is documented in `evaluation/README.md`; (2) inference precision is unstated in the paper (we use the checkpoints' native bf16); (3) "Gemma2" size is unstated (we use 9B; Gemma is our most deviant model). All seven forced assumptions are listed in the deviation ledger (`generation/README.md`, `report/`).
+The faithful implementation reproduces the paper's *non-hallucinated* class means closely (several cells within 0.01-0.03 nats) while our *hallucinated* class means run ~0.2-0.4 nats below the paper's throughout - the separation gap is compressed, though never inverted. The main suspects, in order: (1) the paper never states how answer-level labels become *sentence*-level labels - our mapping rule is documented in `evaluation/README.md`; (2) inference precision is unstated in the paper (we use the checkpoints' native bf16); (3) "Gemma2" size is unstated (we use 9B; Gemma is our most deviant model). All seven forced assumptions are listed in the deviation ledger (`generation/README.md`, `report/`).
 
 One negative result worth knowing: **batched greedy decoding is not deterministic** (batched-matmul rounding flips near-tie argmax choices; one of four test prompts diverged textually in bf16). All reported runs are batch-1; `tools/validate_batching.py` reproduces the finding.
 
 ## Reproducibility
 
-- Decoding is greedy (`do_sample=False`) with batch size 1 — fully deterministic per model + prompt; no random seeds are involved anywhere in the replication path.
+- Decoding is greedy (`do_sample=False`) with batch size 1 - fully deterministic per model + prompt; no random seeds are involved anywhere in the replication path.
 - Provenance: every run wrote `generation/outputs/<alias>/run_meta.json` (model id, dtype, GPU, library versions, timestamp). The three reported runs: LLaMA-3 on Colab A100-40GB, Qwen2 + Gemma-2 on Colab L4, all bf16, transformers 4.57.6.
-- Wall-clock: ~17–28 s/prompt (512 new tokens) → ~1.5–2.5 h per model on Colab; aggregation from committed outputs takes seconds on any laptop.
+- Wall-clock: ~17-28 s/prompt (512 new tokens) → ~1.5-2.5 h per model on Colab; aggregation from committed outputs takes seconds on any laptop.
 - Tests: `python run_all.py --tests` runs 12 sanity assertions on the committed prompts and result CSVs (dataset integrity, C1 in all 9 cells, entropy ranges, AUROC bounds, near-match cells, figure presence). All 12 pass on the committed results.
 
 ## Citation

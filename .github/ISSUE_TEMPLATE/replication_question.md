@@ -12,7 +12,7 @@ assignees: ''
 
 ## Paper reference
 
-<!-- Which part of Joo et al. 2025 (Eq. 1, Eq. 2, Table I, Fig. 1, Discussion) — or of the upstream protocol (Ivgi et al. 2024) — motivates this? -->
+<!-- Which part of Joo et al. 2025 (Eq. 1, Eq. 2, Table I, Fig. 1, Discussion) - or of the upstream protocol (Ivgi et al. 2024) - motivates this? -->
 
 ## Numbers in question
 

@@ -1,7 +1,7 @@
 """12-test sanity suite for the HalluScope replication.
 
-Runs against the COMMITTED artifacts only — the upstream datasets and the
-result CSVs/figures under results/ — so it needs no GPU and no model
+Runs against the COMMITTED artifacts only - the upstream datasets and the
+result CSVs/figures under results/ - so it needs no GPU and no model
 downloads (deps: pandas, pytest). It guards three things:
 
   1. dataset integrity (tests 1-4): the inputs are still byte-faithful to the
@@ -34,7 +34,7 @@ EXPECTED_COUNTS = {"trivia_facts.jsonl": 97,
                    "qampari_rephrased.jsonl": 100,
                    "fake_qampari.jsonl": 100}
 ALIASES = {"llama3-8b-instruct", "qwen2-7b-instruct", "gemma2-9b-it"}
-LN_VOCAB_MAX = 12.45  # ln(256k), Gemma-2 — theoretical entropy ceiling
+LN_VOCAB_MAX = 12.45  # ln(256k), Gemma-2 - theoretical entropy ceiling
 
 
 def _lines(p):
@@ -42,7 +42,7 @@ def _lines(p):
 
 
 def _nonh_sent(row):
-    """Strict (CORRECT sentences) where it exists, else broad — same rule
+    """Strict (CORRECT sentences) where it exists, else broad - same rule
     build_table1 uses for FakeQAMPARI, which has no CORRECT class."""
     v = row["nonh_sent_strict"]
     return row["nonh_sent_broad"] if (isinstance(v, float) and math.isnan(v)) else v
@@ -118,7 +118,7 @@ def test_08_entropies_within_theoretical_range(table1):
     cols = ["h_token", "h_sent", "nonh_token_broad", "nonh_sent_broad"]
     vals = table1[cols].to_numpy().ravel()
     assert ((vals > 0) & (vals < LN_VOCAB_MAX)).all(), \
-        "entropy outside (0, ln|V|) — wrong axis / scores-vs-logits bug?"
+        "entropy outside (0, ln|V|) - wrong axis / scores-vs-logits bug?"
 
 
 def test_09_c1_also_holds_for_the_papers_printed_values(table1):

@@ -5,4 +5,4 @@ contact_links:
     about: For questions about the original paper (not this replication), please contact the paper authors directly.
   - name: Dataset / labeling-protocol issues
     url: https://github.com/Mivg/fallbacks
-    about: The three evaluation datasets and the labeling protocol come from Ivgi et al. (2024) — upstream questions belong there.
+    about: The three evaluation datasets and the labeling protocol come from Ivgi et al. (2024) - upstream questions belong there.
