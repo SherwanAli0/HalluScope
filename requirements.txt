@@ -1,0 +1,13 @@
+# HalluScope — faithful replication of Joo, Lee & Choi (2025)
+# Python 3.11. Install torch separately for your platform first, e.g.:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+transformers>=4.38,<5   # output_logits=True (raw logits) needs >=4.38; <5 keeps compatibility with torch 2.5.x (transformers 5.x needs a newer torch). Tested on 4.46.3.
+accelerate
+bitsandbytes>=0.43     # 4-bit NF4; native Windows wheels since 0.43
+spacy>=3.7             # then: python -m spacy download en_core_web_sm
+scikit-learn
+matplotlib
+pandas
+numpy
+packaging
+PyYAML

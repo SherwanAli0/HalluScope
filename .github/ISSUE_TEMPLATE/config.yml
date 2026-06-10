@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question about the paper itself
+    url: https://ieeexplore.ieee.org/document/10936832
+    about: For questions about the original paper (not this replication), please contact the paper authors directly.
+  - name: Dataset / labeling-protocol issues
+    url: https://github.com/Mivg/fallbacks
+    about: The three evaluation datasets and the labeling protocol come from Ivgi et al. (2024) — upstream questions belong there.

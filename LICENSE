@@ -1,0 +1,89 @@
+============================================================
+DUAL LICENSE
+============================================================
+
+This repository uses two complementary licenses:
+
+1. SOURCE CODE — MIT License (see Section A below).
+   Applies to all .py, .yml, .toml, .cfg, .ipynb, Makefile, and any
+   other executable/script files written by the authors.
+
+2. DOCUMENTATION, RESULTS, AND RESEARCH NOTES — Creative Commons
+   Attribution 4.0 International (CC-BY 4.0) (see Section B below).
+   Applies to all .md, .csv (results), .png (figures), .docx
+   (reports), and the replication notes in this repository.
+
+3. PAPER PDF — Copyright IEEE / the original authors.
+   Included for academic reference only. See Section C below.
+
+4. UPSTREAM MATERIAL — the three dataset files in data/upstream/
+   and the reference script evaluation/upstream/ are from
+   https://github.com/Mivg/fallbacks (Ivgi et al., 2024) and remain
+   under THEIR MIT license (a copy is kept at
+   evaluation/upstream/LICENSE). They are redistributed here
+   unmodified, with attribution, as the replication inputs.
+
+If a single file is unclear in scope (e.g. a notebook combining
+code and documentation), the more permissive of the two licenses
+applies.
+
+============================================================
+A. MIT License (source code)
+============================================================
+
+Copyright (c) 2026 Sherwan Ali, Ipek Ucar, Yaprak Sevinc Aldogan,
+                   Yasmine Guidoum, Abdenour Hichem Guidoum
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+============================================================
+B. Documentation, Results, and Research Notes
+   Creative Commons Attribution 4.0 International (CC-BY 4.0)
+============================================================
+
+Copyright (c) 2026 Sherwan Ali, Ipek Ucar, Yaprak Sevinc Aldogan,
+                   Yasmine Guidoum, Abdenour Hichem Guidoum
+
+This work is licensed under the Creative Commons Attribution 4.0
+International License. To view a copy of this license, visit
+https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+
+  Share — copy and redistribute the material in any medium or format
+  Adapt — remix, transform, and build upon the material for any
+  purpose, even commercially.
+
+Under the following terms:
+
+  Attribution — You must give appropriate credit (cite this
+  repository and its authors — see CITATION.cff and the Citation
+  section of README.md), provide a link to the license, and indicate
+  if changes were made.
+
+============================================================
+C. Original paper PDF
+============================================================
+
+The file Entropy-based_Sentence-level_Hallucination_Score.pdf is the
+copyright of its authors (Joo, Lee, Choi) and IEEE. It is included
+for academic reference under fair-use quotation and is NOT covered
+by either license above. If the publisher requires its removal, open
+an issue and it will be replaced with a link to the IEEE Xplore
+record (DOI 10.1109/BigComp64353.2025.00022).

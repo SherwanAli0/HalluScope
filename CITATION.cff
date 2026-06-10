@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+title: "HalluScope: Faithful Replication of the Entropy-based Sentence-level Hallucination Score (Joo et al., IEEE BigComp 2025)"
+message: "If you use this software, please cite both the original paper and this replication."
+type: software
+authors:
+  - family-names: Ali
+    given-names: Sherwan
+    affiliation: "Uskudar University"
+    alias: SherwanAli0
+  - family-names: Ucar
+    given-names: Ipek
+    affiliation: "Uskudar University"
+    alias: ipekucr
+  - family-names: Sevinc Aldogan
+    given-names: Yaprak
+    affiliation: "Uskudar University"
+    alias: YaprakSevincAldogan
+  - family-names: Guidoum
+    given-names: Yasmine
+    affiliation: "Uskudar University"
+    alias: Dandyyass
+  - family-names: Guidoum
+    given-names: Abdenour Hichem
+    affiliation: "Uskudar University"
+license: MIT
+date-released: 2026-06-10
+keywords:
+  - large language models
+  - hallucination detection
+  - uncertainty quantification
+  - entropy
+  - replication study
+  - white-box LLM evaluation
+references:
+  - type: conference-paper
+    title: "Entropy-based Sentence-level Hallucination Score in Large Language Models"
+    authors:
+      - family-names: Joo
+        given-names: Eojin
+      - family-names: Lee
+        given-names: Young-Jun
+      - family-names: Choi
+        given-names: Ho-Jin
+    conference:
+      name: "2025 IEEE International Conference on Big Data and Smart Computing (BigComp)"
+    start: 77
+    end: 78
+    year: 2025
+    publisher:
+      name: "IEEE"
+    doi: "10.1109/BigComp64353.2025.00022"
+  - type: article
+    title: "From Loops to Oops: Fallback Behaviors of Language Models Under Uncertainty"
+    authors:
+      - family-names: Ivgi
+        given-names: Maor
+      - family-names: Yoran
+        given-names: Ori
+      - family-names: Berant
+        given-names: Jonathan
+      - family-names: Geva
+        given-names: Mor
+    year: 2024
+    doi: "10.48550/arXiv.2407.06071"
+    notes: "Source of the three evaluation datasets and the hallucination-labeling protocol (github.com/Mivg/fallbacks, MIT)."
