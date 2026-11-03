@@ -29,9 +29,8 @@ Usage:
 
 import argparse
 import json
+import math
 from pathlib import Path
-
-import spacy
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
@@ -41,6 +40,38 @@ OUT_DIR = HERE / "outputs"
 
 def overlap(a_start, a_end, b_start, b_end):
     return max(0, min(a_end, b_end) - max(a_start, b_start))
+
+
+def check_record(rec):
+    """Validate one Stage-2 record against PIPELINE_CONTRACT section 2.
+
+    Stage 2 may have run on another machine (Colab zip / Drive), so reject
+    malformed input loudly instead of silently mis-assigning tokens: spans
+    must index into `completion`, be ordered and non-overlapping, and every
+    entropy must be finite and non-negative.
+    """
+    rid = rec.get("id", "?")
+    for key in ("id", "dataset", "completion", "tokens"):
+        if key not in rec:
+            raise ValueError(f"{rid}: missing field {key!r}")
+    n = len(rec["completion"])
+    prev_end = 0
+    for i, tok in enumerate(rec["tokens"]):
+        for key in ("entropy", "span", "special", "logprob"):
+            if key not in tok:
+                raise ValueError(f"{rid}: token {i} missing field {key!r}")
+        s, e = tok["span"]
+        if not (0 <= s <= e <= n):
+            raise ValueError(f"{rid}: token {i} span {[s, e]} outside completion "
+                             f"of length {n}")
+        if s < prev_end:
+            raise ValueError(f"{rid}: token {i} span {[s, e]} overlaps or precedes "
+                             f"the previous token (ends at {prev_end})")
+        prev_end = e
+        ent = tok["entropy"]
+        if not (isinstance(ent, (int, float)) and math.isfinite(ent) and ent >= -1e-6):
+            raise ValueError(f"{rid}: token {i} entropy {ent!r} is not finite "
+                             "and >= 0 (fp16 overflow? wrong logits axis?)")
 
 
 def assign_tokens(sent_spans, tokens):
@@ -76,6 +107,8 @@ def main():
     ap.add_argument("--spacy-model", default="en_core_web_sm")
     args = ap.parse_args()
 
+    import spacy  # imported here so the pure helpers above are testable without spaCy
+
     nlp = spacy.load(args.spacy_model, exclude=["ner", "lemmatizer"])
 
     in_dir = Path(args.gen_dir) / args.alias
@@ -93,6 +126,7 @@ def main():
              open(out_path, "w", encoding="utf-8") as fout:
             for line in fin:
                 rec = json.loads(line)
+                check_record(rec)
                 text = rec["completion"]
                 doc = nlp(text)
                 sent_spans = [(s.start_char, s.end_char) for s in doc.sents]

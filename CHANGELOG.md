@@ -2,6 +2,20 @@
 
 All notable changes to this repository are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/), and the project uses simple `MAJOR.MINOR.PATCH` versions.
 
+## [Unreleased]
+
+Repair pass (documentation, input validation, tests); no result files, labels or generation code paths changed.
+
+### Fixed
+- `integration/config.yaml` was invalid YAML (inconsistent indentation) and listed 4-bit settings that the reported runs did not use; it now parses and matches the run metadata (bf16, no quantization, batch 1). It is documentation only; no script reads it.
+- `build_table1.py` / `classifier.py` crashed with `KeyError: 'dataset'` (build) or silently overwrote `results/tables/classification_metrics.csv` with an empty file and wrote an empty ROC figure (classifier) when an alias had no labeled outputs; both now exit before writing anything. `classifier.py` also no longer overwrites a figure/CSV when no dataset has both classes.
+- `run_all.py --only aggregate` printed "run_all complete" and exited 0 when `evaluation/outputs/` was missing; it now exits non-zero, and warns when only some aliases are present.
+- `label.py` now fails before truncating its output file when a generation id is missing from the prompt file or the Stage-3 output; `sentence_entropy.py` validates Stage-2 records (spans in range and ordered, finite entropies) and no longer imports spaCy at module load (so the alignment helper is testable without spaCy).
+- Documentation corrections: the "hallucinated class ~0.2-0.4 nats below the paper everywhere / non-hallucinated matches closely" statement (README, RESULTS_SUMMARY; the 1.0.0 notes below and the handoff report still carry it) was inconsistent with `results/tables/replication_table1.csv` and is replaced by per-cell numbers; stale 4-bit/T4 instructions, the "pinned" and Python 3.10-3.13 claims, "fully deterministic" wording, the contract's "digits masked" repetition rule, and the `results/README.md` gitignore statement were corrected; a "Scope and limits" section states that sentence entropy is an uncertainty signal, not a factuality guarantee.
+
+### Added
+- `tests/test_stage_contracts.py`: synthetic fixtures for Stage 3 alignment/validation, Stage 4 labeling rules, aggregation definitions, single-class metric preconditions, missing-input handling, committed-artifact invariants and the config file.
+
 ## [1.0.0] - 2026-06-10
 
 The complete faithful replication, implemented and run end-to-end in a single day.

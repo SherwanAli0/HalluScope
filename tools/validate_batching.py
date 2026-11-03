@@ -1,10 +1,12 @@
 """Validate that batched generation matches the single-prompt path.
 
-Batching is a speed optimization, not a method change - so it must produce the
-same per-token entropies as batch-1 (up to floating-point noise from batched
-matmuls and left padding). This script runs the SAME few prompts both ways on a
-small model and reports the maximum entropy difference. If it's tiny
-(< ~0.01 nats), the batched path is faithful and safe for the real runs.
+Batching would be a speed optimization, not a method change - if it produced
+the same per-token entropies as batch-1 (up to floating-point noise from
+batched matmuls and left padding). This script runs the SAME few prompts both
+ways on a small model and reports the maximum entropy difference and the number
+of textually diverged completions. The authors' runs FAILED this check in bf16
+(near-tie argmax flips), which is why every reported run uses batch-1; the
+script remains to reproduce that finding.
 
 Usage:
   py -3.11 tools/validate_batching.py --model google/gemma-2-2b-it --load-4bit --n 4 --max-new-tokens 96

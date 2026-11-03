@@ -1,38 +1,55 @@
 # HalluScope replication configuration
 # Part A - faithful replication of Joo, Lee & Choi (2025).
 #
+# NOTE: this file is documentation of the experiment matrix; no script in the
+# repository reads it (run_pipeline.py takes --model/--alias/--dtype on the
+# command line). Keep it in sync with the README commands by hand.
+#
+# The three REPORTED runs used native bf16, NO quantization (load_4bit false),
+# greedy decoding, batch size 1 (see run_meta.json written by each run):
+#   llama3-8b-instruct  Colab A100-40GB
+#   qwen2-7b-instruct   Colab L4
+#   gemma2-9b-it        Colab L4
+# 4-bit NF4 (--load-4bit) is an optional low-memory path that was NOT used for
+# the reported results; numbers from it are a different configuration and must
+# not be mixed into the replication tables.
+#
 # The paper names "LLaMa3, Qwen2, Gemma2" without sizes or variants
 # (documented deviation: we use the standard instruct checkpoints).
-# where: "colab" = needs a 16 GB T4 (4-bit NF4); "local" = fits a small GPU.
+# where: "colab" = needs a >=24 GB GPU for bf16 (A100/L4); "local" = fits a small GPU.
 
 max_new_tokens: 512          # upstream default (--k 512)
 decoding: greedy             # do_sample=False everywhere, non-negotiable
+batch_size: 1                # reported runs; batched greedy is not reproducible
 
 models:
- - alias: llama3-8b-instruct
+  - alias: llama3-8b-instruct
     hf_id: meta-llama/Meta-Llama-3-8B-Instruct
     paper_name: LLaMa3
-    load_4bit: true
+    dtype: bfloat16
+    load_4bit: false
     where: colab
     gated: true              # accept Meta license on the HF model page
- - alias: qwen2-7b-instruct
+  - alias: qwen2-7b-instruct
     hf_id: Qwen/Qwen2-7B-Instruct
     paper_name: Qwen2
-    load_4bit: true
+    dtype: bfloat16
+    load_4bit: false
     where: colab
     gated: false
- - alias: gemma2-9b-it
+  - alias: gemma2-9b-it
     hf_id: google/gemma-2-9b-it
     paper_name: Gemma2
-    load_4bit: true          # fp16 is BROKEN for Gemma-2; 4-bit or fp32 only
+    dtype: bfloat16          # fp16 is BROKEN for Gemma-2; bf16, fp32 or 4-bit only
+    load_4bit: false
     where: colab
     gated: true              # accept Gemma license on the HF model page
 
 # Local alternative for Gemma2 if Colab time runs out (fits RTX 2050 4 GB
 # in 4-bit with bf16 compute). Smaller than the likely paper model - if used,
-# report it as a deviation.
+# report it as a deviation and give it a NEW alias.
 fallback_models:
- - alias: gemma2-2b-it
+  - alias: gemma2-2b-it
     hf_id: google/gemma-2-2b-it
     paper_name: Gemma2
     load_4bit: true

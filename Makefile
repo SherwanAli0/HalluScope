@@ -4,7 +4,7 @@
 #   make data        validate the committed datasets, build the unified prompt file
 #   make aggregate   rebuild results/tables + results/figures from committed outputs
 #   make all         data + aggregate
-#   make tests       run the 12-test sanity suite
+#   make tests       run tests/ (12 sanity tests + stage-contract fixtures)
 #   make smoke       tiny end-to-end pipeline test (downloads Qwen2-0.5B, CPU-ok)
 #   make clean       remove __pycache__ and .pyc files
 #

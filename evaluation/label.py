@@ -3,7 +3,9 @@
 The functions `extract_answers`, `normalize_answer`, `remove_trailing_parenthesis`,
 `tokenize`, `longest_common_subsequence`, `compute_similarity`, `greedy_match`
 and `get_correct_answers`, plus the CORRECT/HALLUCINATION/REPETITION ordering
-rule, are ported VERBATIM (prints removed) from:
+rule, are ported VERBATIM (prints/comments removed; unused options dropped:
+`return_before_after`, and `get_correct_answers(method=...)` other than the
+default 'greedy') from:
 
     https://github.com/Mivg/fallbacks/blob/main/run_hallucinations_check.py
     Ivgi, Yoran, Berant, Geva (2024) "From Loops to Oops", MIT license
@@ -358,6 +360,19 @@ def main():
         assert ent_path.exists(), f"missing entropy output {ent_path} - run Stage 3 first"
         ent_by_id = {json.loads(l)["id"]: json.loads(l)["sentences"]
                      for l in open(ent_path, encoding="utf-8")}
+
+        # validate inputs BEFORE opening (and truncating) the output file
+        for line in open(f, encoding="utf-8"):
+            rid = json.loads(line)["id"]
+            if rid not in gold:
+                raise SystemExit(
+                    f"[error] {f.name}: id {rid!r} is not in {DATA_FILE.name} "
+                    "- regenerate it with data/fetch_datasets.py (Stage 1)")
+            if rid not in ent_by_id:
+                raise SystemExit(
+                    f"[error] {f.name}: id {rid!r} has generation output but no "
+                    f"Stage-3 record in {ent_path} - re-run "
+                    "entropy/sentence_entropy.py for this alias")
 
         out_path = out_dir / f.name
         with open(f, encoding="utf-8") as fin, \

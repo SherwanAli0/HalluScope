@@ -1,9 +1,23 @@
 # HalluScope - faithful replication of Joo, Lee & Choi (2025)
-# Python 3.11. Install torch separately for your platform first, e.g.:
-#   pip install torch --index-url https://download.pytorch.org/whl/cu121
-transformers>=4.38,<5   # output_logits=True (raw logits) needs >=4.38; <5 keeps compatibility with torch 2.5.x (transformers 5.x needs a newer torch). Tested on 4.46.3.
+#
+# Two install tiers:
+#   (a) Aggregation + tests only (no GPU, no torch/transformers/spaCy):
+#         pip install pandas numpy scikit-learn matplotlib pytest
+#       This is all that `python run_all.py`, `python run_all.py --tests` and
+#       CI need; the generation stack below is not required for them.
+#   (b) Full generation (this file). Python 3.11 was used for development.
+#       Install torch separately for your platform first, e.g.:
+#         pip install torch --index-url https://download.pytorch.org/whl/cu121
+#
+# Versions are RANGES, not pins, except where a bound is stated. The reported
+# runs recorded (run_meta.json): transformers 4.57.6, torch 2.11.0+cu128.
+# The earlier note here said "Tested on 4.46.3" (a local setup with torch 2.5.1,
+# not the reported runs). The spaCy and en_core_web_sm versions used for the
+# committed sentence segmentation were not recorded in any committed file (the
+# handoff report says en_core_web_sm 3.8.x).
+transformers>=4.38,<5   # output_logits=True (raw logits) needs >=4.38; <5 is a compatibility cap (5.x was not tested; the original note says it needs a newer torch than 2.5.x)
 accelerate
-bitsandbytes>=0.43     # 4-bit NF4; native Windows wheels since 0.43
+bitsandbytes>=0.43     # only needed for the optional --load-4bit path; native Windows wheels since 0.43
 spacy>=3.7             # then: python -m spacy download en_core_web_sm
 scikit-learn
 matplotlib

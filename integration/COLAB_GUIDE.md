@@ -4,7 +4,7 @@ Your laptop GPU (4 GB) can run **Gemma-2-2B** but **not** LLaMA-3-8B or
 Qwen2-7B - those need ~16 GB. Google Colab gives you a bigger GPU in the
 browser. With **Colab Pro**, pick an **A100 (40 GB)** and run every model in
 its native **bf16** precision (no quantization) - this is both the fastest
-option and the *most faithful* (no 4-bit deviation, fully deterministic). This
+option and the *most faithful* (no 4-bit deviation; greedy batch-1, though bit-exact repeatability across GPUs is not guaranteed). This
 guide assumes **zero** prior Colab experience. Follow it top to bottom.
 
 You will run **all three replication models** on Colab:

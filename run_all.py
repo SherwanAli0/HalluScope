@@ -4,7 +4,7 @@ Regenerates every table and figure in results/ from the committed labeled
 data (evaluation/outputs/) - no GPU needed, takes seconds:
 
     python run_all.py             # fetch+validate data, rebuild tables+figures
-    python run_all.py --tests     # additionally run the 12-test sanity suite
+    python run_all.py --tests     # additionally run tests/ (12 sanity tests + stage-contract fixtures)
     python run_all.py --only data         # just validate/build the datasets
     python run_all.py --only aggregate    # just rebuild results/
 
@@ -39,17 +39,21 @@ def main():
     if args.only in (None, "aggregate"):
         present = [a for a in ALIASES
                    if (REPO / "evaluation" / "outputs" / a).is_dir()]
+        missing = [a for a in ALIASES if a not in present]
         if not present:
-            print("\n[skip] no evaluation/outputs/<alias>/ found - nothing to "
-                  "aggregate. (Did you clone without the committed outputs, "
-                  "or are you mid-regeneration?)")
-        else:
-            print(f"\naggregating aliases: {present}")
-            run("evaluation/build_table1.py", "--aliases", *present)
-            run("evaluation/classifier.py", "--aliases", *present)
+            sys.exit("\n[error] no evaluation/outputs/<alias>/ found - nothing to "
+                     "aggregate, and results/ was NOT rebuilt. (Did you clone "
+                     "without the committed outputs?) Regenerating the labeled "
+                     "outputs needs the GPU run in integration/COLAB_GUIDE.md.")
+        if missing:
+            print(f"\n[warn] no labeled outputs for {missing}: results/ will be "
+                  f"rebuilt from {present} only (tests/ expect all 3 aliases).")
+        print(f"\naggregating aliases: {present}")
+        run("evaluation/build_table1.py", "--aliases", *present)
+        run("evaluation/classifier.py", "--aliases", *present)
 
     if args.tests:
-        print("\n=== sanity suite (12 tests)")
+        print("\n=== test suite (tests/)")
         rc = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-v"],
                             cwd=REPO).returncode
         sys.exit(rc)

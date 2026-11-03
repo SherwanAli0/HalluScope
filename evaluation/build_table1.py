@@ -34,6 +34,7 @@ Usage:
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -86,6 +87,12 @@ def main():
     ap.add_argument("--aliases", nargs="+", required=True)
     ap.add_argument("--lab-dir", default=str(LAB_DIR))
     args = ap.parse_args()
+
+    for alias in args.aliases:  # fail before touching results/ on a bad alias
+        adir = Path(args.lab_dir) / alias
+        if not adir.is_dir() or not any(adir.glob("*.jsonl")):
+            sys.exit(f"[error] no labeled *.jsonl under {adir} - nothing to "
+                     f"aggregate for alias '{alias}' (results/ left unchanged)")
 
     TABLES.mkdir(parents=True, exist_ok=True)
     rows = []
