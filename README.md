@@ -52,6 +52,7 @@ Project presentation videos on the [HalluScope YouTube channel](https://www.yout
 .
 +-- README.md
 +-- LICENSE                     dual MIT (code) + CC-BY 4.0 (text/results)
++-- LICENSE-CC-BY-4.0.txt       full legal code of CC-BY 4.0 (verbatim official text)
 +-- CITATION.cff
 +-- CONTRIBUTORS.md             CRediT-style role attribution
 +-- PIPELINE_CONTRACT.md        binding JSONL interfaces between the 5 stages
@@ -242,7 +243,7 @@ A `CITATION.cff` is provided so GitHub renders a "Cite this repository" button a
 This repository is dual-licensed:
 
 - Source code (Python files, notebook, Makefile, configs): [MIT License](LICENSE).
-- Documentation, results CSVs, figures, reports, and research notes: [CC-BY 4.0](LICENSE).
+- Documentation, results CSVs, figures, reports, and research notes: [CC-BY 4.0](LICENSE). The full legal code is included in [LICENSE-CC-BY-4.0.txt](LICENSE-CC-BY-4.0.txt).
 - The upstream datasets and reference script (`data/upstream/`, `evaluation/upstream/`) remain under the Ivgi et al. MIT license (`evaluation/upstream/LICENSE`).
 - The original IEEE paper PDF is included for academic reference under fair-use quotation and is the copyright of its authors and IEEE; if the publisher requires its removal, open an issue and it will be replaced with a link.
 
