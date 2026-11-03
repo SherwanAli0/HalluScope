@@ -19,6 +19,7 @@ Usage:
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -57,6 +58,12 @@ def main():
     ap.add_argument("--lab-dir", default=str(LAB_DIR))
     args = ap.parse_args()
 
+    for alias in args.aliases:  # fail before touching results/ on a bad alias
+        adir = Path(args.lab_dir) / alias
+        if not adir.is_dir() or not any(adir.glob("*.jsonl")):
+            sys.exit(f"[error] no labeled *.jsonl under {adir} - nothing to "
+                     f"classify for alias '{alias}' (results/ left unchanged)")
+
     TABLES.mkdir(parents=True, exist_ok=True)
     FIGURES.mkdir(parents=True, exist_ok=True)
 
@@ -64,6 +71,7 @@ def main():
     for alias in args.aliases:
         adir = Path(args.lab_dir) / alias
         fig, ax = plt.subplots(figsize=(6, 5))
+        n_curves = 0
         for f in sorted(adir.glob("*.jsonl")):
             ds = f.stem
             pos, neg_strict, neg_broad = collect(f)
@@ -81,6 +89,12 @@ def main():
                          "precision": p, "recall": r, "threshold": thr})
             fpr, tpr, _ = roc_curve(y, s)
             ax.plot(fpr, tpr, label=f"{ds} (AUROC={auroc:.3f}, {neg_def})")
+            n_curves += 1
+
+        if n_curves == 0:  # nothing plottable: do not overwrite an existing figure
+            plt.close(fig)
+            print(f"[skip] {alias}: no dataset with both classes, no ROC figure written")
+            continue
 
         ax.plot([0, 1], [0, 1], "k--", lw=0.8)
         ax.set_xlabel("False positive rate")
@@ -92,6 +106,9 @@ def main():
         plt.close(fig)
         print(f"[ ok ] ROC figure -> {FIGURES / f'roc_{alias}.png'}")
 
+    if not rows:
+        sys.exit("[error] no dataset had both classes (H and a non-H class); "
+                 "classification_metrics.csv left unchanged")
     df = pd.DataFrame(rows)
     out = TABLES / "classification_metrics.csv"
     df.to_csv(out, index=False)
