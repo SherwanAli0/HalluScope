@@ -10,7 +10,7 @@ run the 7-9B replication models that don't fit local hardware.
 |---|---|
 | `run_pipeline.py` | Runs data → generation → entropy → labeling for one model alias; `--aggregate` builds Table I + classifier metrics across aliases |
 | `config.yaml` | Documentation of the experiment matrix: exact HF model ids, dtype/quantization, where each model runs, which are gated. Not read by any script. |
-| `colab_replication.ipynb` | Self-contained Colab notebook for the three replication models (check its runtime/dtype cells against the matrix below before reusing it; `COLAB_GUIDE.md` describes the path actually used for the reported runs) |
+| `colab_replication.ipynb` | Self-contained Colab notebook. It targets a free T4 with `--load-4bit` (4-bit NF4), which is **not** the configuration of the reported runs (bf16, A100/L4); for a faithful re-run follow `COLAB_GUIDE.md` instead, or change the notebook's runtime and flags to match the matrix below |
 
 ## Execution matrix
 
