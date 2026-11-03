@@ -50,52 +50,52 @@ Project presentation videos on the [HalluScope YouTube channel](https://www.yout
 
 ```
 .
-├── README.md
-├── LICENSE                     dual MIT (code) + CC-BY 4.0 (text/results)
-├── CITATION.cff
-├── CONTRIBUTORS.md             CRediT-style role attribution
-├── PIPELINE_CONTRACT.md        binding JSONL interfaces between the 5 stages
-├── RESULTS_SUMMARY.md          one-page results overview
-├── requirements.txt
-├── Makefile
-├── run_all.py                  cross-platform single-command reproduction
-├── Entropy-based_Sentence-level_Hallucination_Score.pdf
-│
-├── data/                       Stage 1 - the paper's exact 297 prompts (Person: Yaprak)
-│   ├── fetch_datasets.py       download + validate + unify
-│   └── upstream/               byte-identical files from Mivg/fallbacks (MIT)
-│
-├── generation/                 Stage 2 - greedy generation + RAW logit entropy (Person: Sherwan)
-│   └── generate.py             output_logits=True, fp32 nats, char spans, resumable
-│
-├── entropy/                    Stage 3 - spaCy sentences + Eq. 2 (Person: Yasmine)
-│   └── sentence_entropy.py
-│
-├── evaluation/                 Stage 4 - labeling + tables + classifier (Person: Hichem)
-│   ├── label.py                verbatim port of the upstream labeling protocol
-│   ├── build_table1.py         ours-vs-paper Table I + C1/C2 verdicts
-│   ├── classifier.py           AUROC / F1 / ROC curves (extension)
-│   ├── upstream/               reference copy of the original script + its MIT license
-│   └── outputs/                COMMITTED labeled per-sentence data (3 models x 3 datasets)
-│
-├── integration/                Stage 5 - orchestration (Person: Ipek)
-│   ├── run_pipeline.py         one-command stage chaining
-│   ├── config.yaml             canonical model set + run settings
-│   ├── COLAB_GUIDE.md          click-by-click GPU run manual (zero experience assumed)
-│   └── colab_replication.ipynb
-│
-├── tools/
-│   └── validate_batching.py    batched-vs-single equivalence test (negative result; batching study: Sherwan)
-│
-├── results/
-│   ├── tables/                 replication_table1.{csv,md}, classification_metrics.csv
-│   └── figures/                roc_<model>.png (3 figures)
-│
-├── report/                     full technical handoff report (.docx) + generator
-│
-└── tests/                      12 sanity checks on the committed data + results,
-    ├── test_sanity.py          plus small synthetic fixtures for stage contracts
-    └── test_stage_contracts.py
++-- README.md
++-- LICENSE                     dual MIT (code) + CC-BY 4.0 (text/results)
++-- CITATION.cff
++-- CONTRIBUTORS.md             CRediT-style role attribution
++-- PIPELINE_CONTRACT.md        binding JSONL interfaces between the 5 stages
++-- RESULTS_SUMMARY.md          one-page results overview
++-- requirements.txt
++-- Makefile
++-- run_all.py                  cross-platform single-command reproduction
++-- Entropy-based_Sentence-level_Hallucination_Score.pdf
+|
++-- data/                       Stage 1 - the paper's exact 297 prompts (Person: Yaprak)
+|   +-- fetch_datasets.py       download + validate + unify
+|   +-- upstream/               byte-identical files from Mivg/fallbacks (MIT)
+|
++-- generation/                 Stage 2 - greedy generation + RAW logit entropy (Person: Sherwan)
+|   +-- generate.py             output_logits=True, fp32 nats, char spans, resumable
+|
++-- entropy/                    Stage 3 - spaCy sentences + Eq. 2 (Person: Yasmine)
+|   +-- sentence_entropy.py
+|
++-- evaluation/                 Stage 4 - labeling + tables + classifier (Person: Hichem)
+|   +-- label.py                verbatim port of the upstream labeling protocol
+|   +-- build_table1.py         ours-vs-paper Table I + C1/C2 verdicts
+|   +-- classifier.py           AUROC / F1 / ROC curves (extension)
+|   +-- upstream/               reference copy of the original script + its MIT license
+|   +-- outputs/                COMMITTED labeled per-sentence data (3 models x 3 datasets)
+|
++-- integration/                Stage 5 - orchestration (Person: Ipek)
+|   +-- run_pipeline.py         one-command stage chaining
+|   +-- config.yaml             canonical model set + run settings
+|   +-- COLAB_GUIDE.md          click-by-click GPU run manual (zero experience assumed)
+|   +-- colab_replication.ipynb
+|
++-- tools/
+|   +-- validate_batching.py    batched-vs-single equivalence test (negative result; batching study: Sherwan)
+|
++-- results/
+|   +-- tables/                 replication_table1.{csv,md}, classification_metrics.csv
+|   +-- figures/                roc_<model>.png (3 figures)
+|
++-- report/                     full technical handoff report (.docx) + generator
+|
++-- tests/                      12 sanity checks on the committed data + results,
+    +-- test_sanity.py          plus small synthetic fixtures for stage contracts
+    +-- test_stage_contracts.py
 ```
 
 Each stage folder has its own README documenting every decision taken inside it. The five stages hand off through files on disk (see `PIPELINE_CONTRACT.md`), so they can run on different machines - generation on a Colab GPU, everything else on a laptop.
