@@ -163,9 +163,10 @@ def generate_batch(model, tokenizer, prompts, max_new_tokens):
 
     Uses LEFT padding so every sequence's generated tokens start at the same
     absolute position, which keeps out.logits[t][b] aligned with sequence b's
-    t-th generated token. With a correct attention mask the real-token logits
-    are identical to the single-prompt path (up to floating-point noise from
-    batched matmuls) - verified by tools/validate_batching.py. Padding/EOS
+    t-th generated token. The token->logit ALIGNMENT is correct, but batched
+    matmul rounding can flip near-tie argmax choices, so the output is NOT
+    guaranteed to equal the single-prompt path (tools/validate_batching.py
+    found such a divergence in bf16). Do not use it for reported results. Padding/EOS
     tokens that trail a finished sequence are flagged `special` and excluded
     from entropy downstream, exactly as the lone EOS is in the batch-1 path.
     """

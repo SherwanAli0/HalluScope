@@ -10,7 +10,7 @@ whole project is built on.
 | Decision | Value | Justification |
 |---|---|---|
 | Prompting | Raw completion text, **no chat template** | Matches the upstream generation script (`run_hallucinations_check.py`, Ivgi et al. 2024) that Joo et al.'s setup follows - it feeds the literal `"...\n1."` prompt to base *and* instruct models. |
-| Decoding | **Greedy** (`do_sample=False`) | Upstream default (`temperature 0, top_p 1, top_k None`). Also makes runs deterministic. |
+| Decoding | **Greedy** (`do_sample=False`) | Upstream default (`temperature 0, top_p 1, top_k None`). Removes sampling randomness; it does not by itself guarantee bit-identical outputs across devices or library versions. |
 | Length | `max_new_tokens=512` | Upstream default (`--k 512`). |
 | Logits | `output_logits=True` (raw), **not** `output_scores=True` | `scores` are *processed* logits; instruct models ship `do_sample=True` generation defaults whose warpers can silently distort them. Raw logits are exactly Eq. 1's p(y_i = v \| c_i) after softmax. Requires transformers ≥ 4.38 (asserted). |
 | Entropy | Full-vocab, computed in **float32**, in **nats** | Half-precision softmax over 128k-256k vocabularies corrupts small-probability mass. Natural log matches the UQ literature the paper builds on. |
@@ -60,10 +60,14 @@ ids are skipped) - this survives Colab runtime disconnects.
 # local smoke test (ungated tiny model)
 py -3.11 generation/generate.py --model Qwen/Qwen2-0.5B-Instruct --alias smoke --limit 2 --max-new-tokens 64
 
-# replication models (Colab T4, 4-bit NF4 - see integration/ notebook)
-python generation/generate.py --model meta-llama/Meta-Llama-3-8B-Instruct --alias llama3-8b-instruct --load-4bit
-python generation/generate.py --model Qwen/Qwen2-7B-Instruct            --alias qwen2-7b-instruct  --load-4bit
-python generation/generate.py --model google/gemma-2-9b-it              --alias gemma2-9b-it       --load-4bit
+# replication models, as REPORTED: native bf16, no quantization, batch 1
+# (A100-40GB or L4 24GB; see integration/COLAB_GUIDE.md)
+python generation/generate.py --model meta-llama/Meta-Llama-3-8B-Instruct --alias llama3-8b-instruct --dtype bfloat16
+python generation/generate.py --model Qwen/Qwen2-7B-Instruct            --alias qwen2-7b-instruct  --dtype bfloat16
+python generation/generate.py --model google/gemma-2-9b-it              --alias gemma2-9b-it       --dtype bfloat16
+
+# optional low-memory path (e.g. a 16 GB T4): add --load-4bit. NOT used for the
+# reported results; its numbers are a different configuration - give it a NEW alias.
 ```
 
 Llama-3 and Gemma-2 are **gated** on HuggingFace: accept the license on the
@@ -73,22 +77,27 @@ model page and authenticate (`huggingface-cli login` or `HF_TOKEN`).
 
 `generate.py --batch-size N` (N>1) can generate N prompts at once for speed.
 We validated it (`tools/validate_batching.py`) and **do not use it** for the
-reported results: in bf16/4-bit, batched greedy decoding is **not
-deterministic** - tiny batched-matmul rounding differences flip occasional
-near-tie token choices, so a batched run diverges from the canonical
+reported results: in bf16/4-bit, batched greedy decoding **does not
+reproduce the batch-1 output** - tiny batched-matmul rounding differences flip
+occasional near-tie token choices, so a batched run diverges from the canonical
 single-prompt greedy output (max per-token entropy diff ~1.5 nats on a
 diverged sequence; completions textually differ). The token→sentence
 *alignment* is correct (identical token counts, identical text on
-non-diverging prompts) - the issue is pure numerical non-determinism inherent
-to batched low-precision inference. All reported runs use **batch-1**
-(`--batch-size 1`, the default), which is deterministic and reproducible.
+non-diverging prompts) - the issue is numerical, inherent to batched
+low-precision inference. All reported runs use **batch-1**
+(`--batch-size 1`, the default), the reference path. Batch-1 greedy removes
+sampling randomness and the batch-size effect; exact repeatability on other
+hardware or library versions has not been verified in this repository.
 
 ## Documented deviations
 
 1. The paper names "LLaMa3, Qwen2, Gemma2" **without sizes or variants**. We
    use the standard instruct checkpoints (8B / 7B / 9B); exact HF ids are in
    `run_meta.json`. This is a forced assumption - flagged in the report.
-2. 7-9B models run in **4-bit NF4** (free Colab T4 cannot hold them in fp16).
-   Quantization perturbs logits slightly; the quant config is identical across
-   all models and is recorded. The `lm_head` stays unquantized by default,
-   which preserves logit fidelity.
+2. Precision is not stated in the paper. The reported runs use each
+   checkpoint's native **bf16 with no quantization** (`run_meta.json`:
+   `dtype: bfloat16`, `load_4bit: false`, identical for all three models).
+   The optional `--load-4bit` path (NF4, for GPUs that cannot hold the model in
+   bf16, e.g. a free Colab T4) perturbs logits slightly and was only used for
+   local validation, never for reported results; never mix quantized and
+   unquantized runs in one comparison.

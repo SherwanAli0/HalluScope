@@ -37,8 +37,9 @@ library versions, device, timestamp). Invariants:
 - `completion` is the `skip_special_tokens=True` decode of the generated ids with `clean_up_tokenization_spaces=False`; all spans index into exactly this string;
 - spans are non-overlapping and ordered; zero-width spans mark pending UTF-8 bytes and special tokens;
 - one `tokens` entry per generated step (entropy computed from RAW logits, `output_logits=True` - never from processed `scores`);
-- decoding for reported runs: greedy (`do_sample=False`), `max_new_tokens=512`, **batch size 1** (batched greedy is non-deterministic - see `tools/validate_batching.py`);
-- writes are append + flush per prompt; re-runs skip ids already present (resume).
+- decoding for reported runs: greedy (`do_sample=False`), `max_new_tokens=512`, **batch size 1** (batched greedy did not reproduce the batch-1 outputs - see `tools/validate_batching.py`; batch-1 is the reference path, not a cross-device bit-exactness guarantee);
+- writes are append + flush per prompt; re-runs skip ids already present (resume). Resume does not check that the existing records came from the same settings; `run_meta.json` is overwritten on every start, so do not resume with a different model, dtype or batch size under the same alias;
+- Stage 3 enforces the structural invariants above (`check_record` in `entropy/sentence_entropy.py`): required fields present, `0 <= start <= end <= len(completion)`, spans ordered and non-overlapping, every `entropy` finite and >= 0. A violating record aborts the stage with the record id and token index.
 
 ## §3 Stage 3 → Stage 4: sentence entropies
 
@@ -56,7 +57,9 @@ library versions, device, timestamp). Invariants:
 Invariants:
 - sentences come from spaCy `en_core_web_sm` over `completion`; `start`/`end` are char offsets into that same string;
 - token→sentence assignment: maximum span overlap; zero-width tokens by containing position; `special` tokens and zero-overlap whitespace tokens are excluded (counts printed for audit);
-- `mean_entropy` is the unweighted mean of `token_entropies` (no filtering, no weighting - paper-faithful).
+- `mean_entropy` is the unweighted mean of `token_entropies` (no filtering, no weighting - paper-faithful);
+- a spaCy sentence that receives no tokens is omitted from `sentences`, so `idx` (the spaCy sentence index) can skip values. This does not occur in the committed artifacts (checked: `idx` is contiguous in all 891 records);
+- the committed Stage-4 files carry only sentence text and per-token entropies, not the raw completion or token spans: Stage 3 cannot be re-run from them.
 
 ## §4 Stage 4: labeled sentences (the COMMITTED artifact)
 
@@ -65,12 +68,12 @@ Invariants:
 ```json
 {"id": "...", "dataset": "...",
  "answer_status": "EOS",            // upstream list-status (FULL/EOS/TOPIC_CHANGE/BAD_FORMAT)
- "answers": [{"text": "Thumb", "label": "C", "span": [1, 6]}, ...],
+ "answers": [{"text": "Thumb", "label": "C", "span": [1, 6]}, ...],   // span is null if the answer could not be located
  "sentences": [{ ...all Stage-3 fields..., "label": "C" }]}
 ```
 
 Label semantics (verbatim port of the upstream protocol - `evaluation/upstream/run_hallucinations_check.py`):
-- per ANSWER: normalize → greedy-LCS match vs gold at threshold 0.55 → first occurrence `C` (matched) or `H` (unmatched); normalized duplicates (digits masked) → `R`; fake_qampari: every unique answer `H`;
+- per ANSWER: normalize → greedy-LCS match vs gold at threshold 0.55 → first occurrence `C` (matched) or `H` (unmatched); a later answer whose NORMALIZED text equals an earlier one → `R` (digits are NOT masked here: "Harry Potter 2" and "Harry Potter 3" are distinct; the upstream protocol masks digits only in its aggregate counts, which this pipeline does not use); fake_qampari: every unique answer `H`;
 - per SENTENCE (our documented mapping): `H` if it overlaps ≥1 H-answer span, else `C` if it overlaps a C-answer span, else `R` if only repetition spans, else `null` (unlabeled - excluded from class means).
 
 ## §5 Stage 4b: aggregated results
@@ -78,6 +81,12 @@ Label semantics (verbatim port of the upstream protocol - `evaluation/upstream/r
 - `results/tables/replication_table1.csv` - 9 rows (3 models x 3 datasets), columns: `dataset, model, nonh_token_strict, nonh_sent_strict, n_nonh_strict, nonh_token_broad, nonh_sent_broad, n_nonh_broad, h_token, h_sent, n_h, paper_nonh_token, paper_nonh_sent, paper_h_token, paper_h_sent`. Token columns are micro-averages over all tokens of a class; sentence columns are macro-averages of sentence means. "strict" non-hallucinated = `C` sentences; "broad" = all non-`H`; FakeQAMPARI has no strict class by construction.
 - `results/tables/classification_metrics.csv` - 9 rows, columns: `model, dataset, neg_class, n_pos, n_neg, auroc, best_f1, precision, recall, threshold` (positive class = `H`; threshold swept on sentence `mean_entropy`).
 - `results/figures/roc_<alias>.png` - one ROC figure per model.
+
+## §5b Missing or partial inputs
+
+- `run_all.py` (aggregate step) exits non-zero and leaves `results/` untouched if no `evaluation/outputs/<alias>/` exists; if only some of the three canonical aliases exist it warns and rebuilds `results/` from those only (tests expect all three).
+- `build_table1.py` / `classifier.py` exit non-zero, before writing anything, if an alias has no `*.jsonl`; `classifier.py` skips a dataset without both classes (no AUROC is computed or invented, and no label is changed) and refuses to overwrite `classification_metrics.csv` with an empty table.
+- `label.py` exits before opening its output file if a generation id is missing from `data/processed/replication.jsonl` or from the Stage-3 output.
 
 ## §6 Aliases
 

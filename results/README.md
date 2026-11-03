@@ -1,8 +1,10 @@
 # Results
 
 Final artifacts produced by Stage 4 aggregation (`evaluation/build_table1.py`
-and `evaluation/classifier.py`). Everything here is **tracked in git** (unlike
-the per-stage `outputs/` folders, which are regenerable and gitignored).
+and `evaluation/classifier.py`). Everything here is **tracked in git**, as is
+`evaluation/outputs/` (the labeled sentences these files are built from). The
+heavier per-stage folders `generation/outputs/` and `entropy/outputs/` (and
+`data/processed/`) are gitignored and are not in the repository.
 
 ## tables/
 
@@ -20,8 +22,15 @@ the per-stage `outputs/` folders, which are regenerable and gitignored).
 
 ## How to regenerate
 
+From the committed labeled outputs (CPU only, seconds; does not regenerate any
+raw model output):
+
 ```
-py -3.11 integration/run_pipeline.py --aggregate <alias1> <alias2> ...
+python run_all.py --only aggregate
 ```
 
-after stages 2-4 have produced outputs for those aliases.
+(equivalently `python integration/run_pipeline.py --aggregate <alias1> <alias2> ...`
+for chosen aliases). Re-running rewrites these files in place; the CSV/Markdown
+tables reproduced exactly in a check with matplotlib 3.11.2, while the ROC PNGs differed
+byte-wise (cause not isolated, most likely the matplotlib version), so keep the committed figures unless a figure actually changed.
+If you generated your own aliases (stages 2-4), pass them to `run_pipeline.py --aggregate`.

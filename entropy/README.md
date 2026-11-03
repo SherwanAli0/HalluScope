@@ -22,8 +22,11 @@ weighting, no filtering. That is exactly what this module computes.
 
 ## Sentence splitting
 
-spaCy `en_core_web_sm` (the paper says only "SpaCy", so the pipeline/version
-is pinned here and reported: see root `requirements.txt`). The completions
+spaCy `en_core_web_sm` (the paper says only "SpaCy"). `requirements.txt` gives
+`spacy>=3.7` as a range; the exact spaCy / model version used for the committed
+segmentation is not recorded in any committed file (the handoff report says
+`en_core_web_sm` 3.8.x), so re-running Stage 3 with another version may move
+sentence boundaries. The completions
 are enumerated lists ("1. X\n2. Y"), which spaCy segments line-by-line in
 practice - each list item becomes its own sentence, which is what makes
 per-item hallucination labels (Stage 4) line up with sentences.
