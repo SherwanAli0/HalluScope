@@ -11,7 +11,7 @@ const REPO = "C:/Users/shero/Downloads/LLM/HalluScope";
 const OUT = REPO + "/report/HalluScope_Replication_Handoff_Report.docx";
 const CONTENT_W = 9360;
 
-// ---------- helpers ----------
+// helpers
 const border = { style: BorderStyle.SINGLE, size: 1, color: "BBBBBB" };
 const borders = { top: border, bottom: border, left: border, right: border };
 const HDR_FILL = "D5E8F0";
@@ -94,10 +94,10 @@ function link(text, url) {
   return new ExternalHyperlink({ children: [new TextRun({ text, style: "Hyperlink" })], link: url });
 }
 
-// ---------- content ----------
+// content
 const children = [];
 
-// ===== COVER =====
+// COVER
 children.push(
   new Paragraph({ spacing: { before: 2400, after: 200 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "HalluScope", bold: true, size: 72 })] }),
@@ -125,7 +125,7 @@ children.push(
   pageBreak(),
 );
 
-// ===== TOC =====
+// TOC
 children.push(
   new Paragraph({ children: [new TextRun({ text: "Table of Contents", bold: true, size: 32 })], spacing: { after: 200 } }),
   new TableOfContents("Table of Contents", { hyperlink: true, headingStyleRange: "1-2" }),
@@ -133,7 +133,7 @@ children.push(
   pageBreak(),
 );
 
-// ===== 1. EXECUTIVE SUMMARY =====
+// 1. EXECUTIVE SUMMARY
 children.push(h1("1. Executive Summary"));
 children.push(p([B("Status: the implementation and the full replication run are COMPLETE. "),
   R("This document contains everything needed to understand, verify, reproduce, and continue the work: every design decision and its justification, the exact experimental recipe, the full results with paper comparison, the incident log, and the remaining tasks for the final submission.")]));
@@ -149,7 +149,7 @@ children.push(
 );
 children.push(pageBreak());
 
-// ===== 2. PAPER + REPLICATION GOAL =====
+// 2. PAPER + REPLICATION GOAL
 children.push(h1("2. The Base Paper and What “Replication” Means"));
 children.push(h2("2.1 The paper"));
 children.push(p([R("Eojin Joo, Young-Jun Lee, Ho-Jin Choi (KAIST), "), B("“Entropy-based Sentence-level Hallucination Score in Large Language Models”"),
@@ -172,7 +172,7 @@ children.push(mkTable([900, 6060, 2400], [
 ]));
 children.push(pageBreak());
 
-// ===== 3. KEY DISCOVERY =====
+// 3. KEY DISCOVERY
 children.push(h1("3. Key Discovery: The Paper’s Exact Data and Labels Are Recoverable"));
 children.push(p([R("The paper says its experiment uses “297 samples, following the setup from [9]”, where [9] is Ivgi, Yoran, Berant & Geva (2024), "), B("“From Loops to Oops: Fallback behaviors of language models under uncertainty”"), R(" (arXiv:2407.06071). Their official MIT-licensed repository "), link("github.com/Mivg/fallbacks", "https://github.com/Mivg/fallbacks"), R(" contains the literal dataset files - and their sizes sum to exactly 297. We therefore run the identical inputs and inherit the identical ground-truth protocol; nothing about the data is reconstructed or guessed.")]));
 children.push(mkTable([1500, 2200, 700, 1200, 3760], [
@@ -195,7 +195,7 @@ children.push(
 children.push(p([B("Generation settings inherited: "), R("greedy decoding (temperature 0, top_p 1, top_k None), 512 new tokens, raw completion prompting with "), B("no chat template"), R(" - the upstream script feeds the literal prompt to base AND instruct models alike. We replicate all of it.")]));
 children.push(pageBreak());
 
-// ===== 4. ARCHITECTURE =====
+// 4. ARCHITECTURE
 children.push(h1("4. System Architecture"));
 children.push(h2("4.1 The five-stage pipeline"));
 children.push(p("Every stage is a standalone script with file-based handoffs (JSONL on disk), so stages can run on different machines (laptop vs Colab) and team members can work independently. integration/run_pipeline.py chains them."));
@@ -211,17 +211,17 @@ children.push(mkTable([700, 2600, 6060], [
 children.push(h2("4.2 Repository layout"));
 children.push(codeBlock([
   "HalluScope/",
-  "├─ README.md                  ← project overview + faithfulness ledger",
-  "├─ requirements.txt           ← pinned deps (transformers>=4.38,<5 - see §6.1)",
-  "├─ data/        fetch_datasets.py, upstream/ (3 jsonl), processed/replication.jsonl, README.md",
-  "├─ generation/  generate.py, outputs/<alias>/<dataset>.jsonl + run_meta.json, README.md",
-  "├─ entropy/     sentence_entropy.py, outputs/<alias>/, README.md",
-  "├─ evaluation/  label.py, build_table1.py, classifier.py, upstream/ (reference + LICENSE), outputs/<alias>/, README.md",
-  "├─ integration/ run_pipeline.py, config.yaml, COLAB_GUIDE.md, colab_replication.ipynb, README.md",
-  "├─ tools/       validate_batching.py (batched-vs-single equivalence test - see §7.3)",
-  "├─ results/     tables/replication_table1.{csv,md}, tables/classification_metrics.csv,",
+  "├\u2500 README.md                  ← project overview + faithfulness ledger",
+  "├\u2500 requirements.txt           ← pinned deps (transformers>=4.38,<5 - see §6.1)",
+  "├\u2500 data/        fetch_datasets.py, upstream/ (3 jsonl), processed/replication.jsonl, README.md",
+  "├\u2500 generation/  generate.py, outputs/<alias>/<dataset>.jsonl + run_meta.json, README.md",
+  "├\u2500 entropy/     sentence_entropy.py, outputs/<alias>/, README.md",
+  "├\u2500 evaluation/  label.py, build_table1.py, classifier.py, upstream/ (reference + LICENSE), outputs/<alias>/, README.md",
+  "├\u2500 integration/ run_pipeline.py, config.yaml, COLAB_GUIDE.md, colab_replication.ipynb, README.md",
+  "├\u2500 tools/       validate_batching.py (batched-vs-single equivalence test - see §7.3)",
+  "├\u2500 results/     tables/replication_table1.{csv,md}, tables/classification_metrics.csv,",
   "│             figures/roc_*.png, raw result zips from the Colab runs",
-  "└─ report/      this report",
+  "└\u2500 report/      this report",
 ]));
 children.push(p("Every folder contains a README.md documenting what it does, the exact decisions taken inside it, input/output formats, and how to run it. Read those before modifying anything."));
 children.push(h2("4.3 Data formats between stages"));
@@ -241,7 +241,7 @@ children.push(codeBlock([
 ]));
 children.push(pageBreak());
 
-// ===== 5. FAITHFUL RECIPE =====
+// 5. FAITHFUL RECIPE
 children.push(h1("5. The Faithful Recipe - Every Decision and Why"));
 children.push(h2("5.1 Decisions"));
 children.push(mkTable([2000, 3000, 4360], [
@@ -274,7 +274,7 @@ children.push(mkTable([400, 2800, 2800, 3360], [
 ]));
 children.push(pageBreak());
 
-// ===== 6. ENVIRONMENT =====
+// 6. ENVIRONMENT
 children.push(h1("6. Environment, Accounts and Hardware"));
 children.push(h2("6.1 Software environment"));
 children.push(mkTable([3000, 6360], [
@@ -304,7 +304,7 @@ children.push(mkTable([3000, 6360], [
 ]));
 children.push(pageBreak());
 
-// ===== 7. EXECUTION LOG =====
+// 7. EXECUTION LOG
 children.push(h1("7. Execution Log - How the Runs Actually Happened"));
 children.push(h2("7.1 Validation ladder (before any paid compute)"));
 children.push(
@@ -342,7 +342,7 @@ children.push(mkTable([600, 2800, 2700, 3260], [
 ]));
 children.push(pageBreak());
 
-// ===== 8. RESULTS =====
+// 8. RESULTS
 children.push(h1("8. Results"));
 children.push(h2("8.1 Replication of Table I (ours vs paper)"));
 children.push(p([R("Sentence-level entropy in nats; each cell shows "), B("ours / paper"), R(". “Non-halluc.” uses sentences labeled CORRECT (strict). For FakeQAMPARI no CORRECT sentences exist by construction, so the non-hallucinated class is all non-H sentences (broad) - marked *. Token columns are micro-averages over all tokens of the class; sentence columns are macro-averages of sentence means.")]));
@@ -416,7 +416,7 @@ children.push(mkTable([2360, 1400, 1400, 1400, 1400, 1400], [
 children.push(p("Answer-span mapping succeeded for 100% of extracted answers in all three runs (e.g. LLaMA: 6,656/6,656). “Unlabeled” sentences overlap no extracted answer (mostly post-list prose, disclaimers, headers) and are excluded from class means - a documented choice and a failure-analysis opportunity (§9)."));
 children.push(pageBreak());
 
-// ===== 9. FAILURE ANALYSIS SEEDS =====
+// 9. FAILURE ANALYSIS SEEDS
 children.push(h1("9. Failure-Analysis Starting Points (for whoever continues)"));
 children.push(
   nump([B("Low-entropy hallucinations and high-entropy correct sentences exist in our data "), R(" -  the paper’s admitted failure modes, now concretely queryable: sort evaluation/outputs/<alias>/*.jsonl sentences by mean_entropy ascending with label H (confident hallucinations) and descending with label C (uncertain truths). These examples are the core of the report’s failure-analysis section.")], "steps3"),
@@ -426,7 +426,7 @@ children.push(
   nump([B("The saved logprob field "), R("(chosen-token log-probability, captured per token alongside entropy) enables immediate comparison of entropy vs perplexity-style signals - and is the input for the planned multi-signal fusion novelty.")], "steps3"),
 );
 
-// ===== 10. REPRODUCE =====
+// 10. REPRODUCE
 children.push(h1("10. How to Reproduce or Continue (exact commands)"));
 children.push(h2("10.1 Local (any machine, small models)"));
 children.push(codeBlock([
@@ -468,7 +468,7 @@ children.push(mkTable([4200, 5160], [
 ]));
 children.push(pageBreak());
 
-// ===== 11. REMAINING WORK =====
+// 11. REMAINING WORK
 children.push(h1("11. Remaining Work (submission deadline: 10-6-2026)"));
 children.push(p("The implementation and results are done. What remains is packaging and presentation:"));
 children.push(
@@ -480,7 +480,7 @@ children.push(
   nump([B("Optional extensions (pipeline-ready): "), R("Part B - generalization to TruthfulQA/HaluEval + Mistral-7B/Phi-3 (config swap; needs a labeling adapter per dataset). Part C - novelty on top of the replication baseline: content-weighted sentence entropy, entropy+logprob fusion (logprob already captured), ln|V|-normalized cross-model entropy. The replication data is labeled, so any new score is evaluated by swapping the scoring function and recomputing AUROC.")], "steps4"),
 );
 
-// ===== 12. REFERENCES =====
+// 12. REFERENCES
 children.push(h1("12. References"));
 children.push(
   nump("Joo, E., Lee, Y.-J., & Choi, H.-J. (2025). Entropy-based Sentence-level Hallucination Score in Large Language Models. IEEE BigComp 2025, pp. 77-78. DOI 10.1109/BigComp64353.2025.00022.", "refs"),
@@ -495,7 +495,7 @@ children.push(
   nump("Honnibal, M., & Montani, I. spaCy - en_core_web_sm 3.8.x.", "refs"),
 );
 
-// ---------- document ----------
+// document
 const doc = new Document({
   styles: {
     default: { document: { run: { font: "Arial", size: 22 } } },
