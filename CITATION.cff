@@ -22,7 +22,9 @@ authors:
   - family-names: Guidoum
     given-names: Abdenour Hichem
     affiliation: "Uskudar University"
-license: MIT
+license:
+  - MIT
+  - CC-BY-4.0
 date-released: 2026-06-10
 keywords:
   - large language models
