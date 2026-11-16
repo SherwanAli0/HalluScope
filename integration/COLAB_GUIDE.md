@@ -222,9 +222,9 @@ files.download("/content/halluscope_outputs.zip")
 ```
 
 Your browser downloads `halluscope_outputs.zip`. Move it into your
-`Downloads\LLM\HalluScope` folder. Then tell me - I'll unzip it and build the
+`Downloads\LLM\HalluScope` folder and unzip it there. Then build the
 final Table I (side-by-side with the paper) and ROC curves from all three
-models.
+models (see `evaluation/README.md`).
 
 > Tip: you don't have to wait for all three. After each model finishes you can
 > run STEP 7 to download what's done so far - the zip just includes whichever
